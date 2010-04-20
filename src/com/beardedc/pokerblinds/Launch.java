@@ -3,7 +3,7 @@ package com.beardedc.pokerblinds;
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
-import android.speech.tts.*;
+import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.widget.TextView;
 
@@ -24,6 +24,11 @@ public class Launch extends Activity implements OnInitListener
         goTimer();
     }
     
+    /* Info: the countdown timer
+     * continues to function even if the application is not in
+     * the foreground and the speech will be set if the
+     * application is not running.
+     */
     private void goTimer()
     {
     	new CountDownTimer(5000, 1000)
@@ -37,7 +42,8 @@ public class Launch extends Activity implements OnInitListener
     			m_tts.setPitch(0.8f);
     			// TODO: Cannot bring in QUEUE_FLUSH for some reason
     	    	// need to find out what needs imported
-    			m_tts.speak("The blinds have gone up",0, null);
+    			m_tts.speak("The blinds have gone up",
+    					android.speech.tts.TextToSpeech.QUEUE_FLUSH, null);
     			m_txtTimer.setText("All done");
     		}
     	}.start();
