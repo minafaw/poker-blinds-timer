@@ -18,15 +18,16 @@ public class Launch extends Activity implements OnInitListener
     @Override
     public void onCreate(Bundle savedInstanceState)
     {
-        super.onCreate(savedInstanceState);       
-        setContentView(R.layout.main);
-        // Here get the elements we need
-        m_txtTimer = (TextView)findViewById(R.id.TextTimer);
-        m_tts = new TextToSpeech(this, this);
-        String name = getPackageName();
-        m_txtTimer.setText(name);
-        Log.d(name, "onCreate Called my moma");
-        goTimer();
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.settings);
+//        setContentView(R.layout.main);
+//        // Here get the elements we need
+//        m_txtTimer = (TextView)findViewById(R.id.TextTimer);
+//        m_tts = new TextToSpeech(this, this);
+//        String name = getPackageName();
+//        m_txtTimer.setText(name);
+//        Log.d(name, "onCreate Called my moma");
+//        goTimer();
     }
     
     public void onStop()
@@ -43,9 +44,13 @@ public class Launch extends Activity implements OnInitListener
     
     public void onDestroy()
     {
-    	m_tts.shutdown();
-    	m_tts = null;
-    	m_timer.cancel();
+    	if (m_tts != null)
+    	{
+	    	m_tts.shutdown();
+	    	m_tts = null;
+    	}
+    	if (m_timer != null)
+    		m_timer.cancel();
     	Log.d(getPackageName(), "onDestroy");
     	super.onDestroy();
     }

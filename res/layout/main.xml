@@ -7,4 +7,5 @@
 
 <TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Poker Blinds Countdown Timer" android:layout_gravity="center_horizontal"></TextView>
 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:id="@+id/TextTimer" android:includeFontPadding="false" android:text="00:00"></TextView>
+
 </LinearLayout>
