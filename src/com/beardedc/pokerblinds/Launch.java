@@ -1,18 +1,27 @@
 package com.beardedc.pokerblinds;
 
+import java.util.Locale;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class Launch extends Activity implements OnInitListener 
+public class Launch extends Activity implements OnInitListener, OnClickListener
 {
 	private TextView m_txtTimer;
 	private TextToSpeech m_tts;
 	private CountDownTimer m_timer;
+	private long m_bigBlind;
+	private long m_timerHours;
+	private long m_timerMinutes;
+	private TextView m_textbigBlind;
 
     /** Called when the activity is first created. */
     @Override
@@ -20,14 +29,32 @@ public class Launch extends Activity implements OnInitListener
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
-//        setContentView(R.layout.main);
-//        // Here get the elements we need
-//        m_txtTimer = (TextView)findViewById(R.id.TextTimer);
-//        m_tts = new TextToSpeech(this, this);
-//        String name = getPackageName();
-//        m_txtTimer.setText(name);
-//        Log.d(name, "onCreate Called my moma");
-//        goTimer();
+        
+        Button saveButt = (Button)findViewById(R.id.ButtonSave);
+        saveButt.setOnClickListener(this);
+        
+        Button butSwitchToMain = (Button)findViewById(R.id.SwitchToMainScreen);
+        butSwitchToMain.setOnClickListener(this);
+
+        m_textbigBlind = (TextView)findViewById(R.id.TextViewSetBigBlind);
+    }
+    
+    public void onClick(View v)
+    {
+    	// do something   	
+    	if (  v.getId() == R.id.SwitchToMainScreen){
+    		
+    		setContentView(R.layout.main);
+            m_txtTimer = (TextView)findViewById(R.id.TextTimer);
+            m_tts = new TextToSpeech(this, this);
+            //m_tts.setLanguage(Locale.FRANCE);
+            String name = getPackageName();
+            m_txtTimer.setText(name);
+            Log.d(name, "onCreate Called my moma");
+            goTimer();
+    	} else{
+    		m_textbigBlind.setText("Button clicked");	
+    	}
     }
     
     public void onStop()
@@ -60,9 +87,10 @@ public class Launch extends Activity implements OnInitListener
      * the foreground and the speech will be set if the
      * application is not running.
      */
-    private void goTimer()
+    @SuppressWarnings("unused")
+	private void goTimer()
     {
-    	m_timer = new CountDownTimer(15000, 1000)
+    	m_timer = new CountDownTimer(5000, 1000)
     	{
     		public void onTick(long msUntilDone)
     		{
@@ -70,11 +98,13 @@ public class Launch extends Activity implements OnInitListener
     		}
     		public void onFinish()
     		{
-    			m_tts.setPitch(0.8f);
+    			m_tts.setPitch(1.5f);
     			// TODO: Cannot bring in QUEUE_FLUSH for some reason
     	    	// need to find out what needs imported
-    			m_tts.speak("The blinds have gone up",
-    					android.speech.tts.TextToSpeech.QUEUE_FLUSH, null);
+    			//m_tts.setSpeechRate( 0.5f);
+    			m_tts.setLanguage(Locale.ENGLISH);
+    			m_tts.speak("Hello how are you today?",
+    					android.speech.tts.TextToSpeech.QUEUE_FLUSH,  null);
     			m_txtTimer.setText("All done");
     			//goTimer();
     		}
