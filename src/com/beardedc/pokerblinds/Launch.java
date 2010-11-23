@@ -18,9 +18,6 @@ public class Launch extends Activity implements OnInitListener, OnClickListener
 	private TextView m_txtTimer;
 	private TextToSpeech m_tts;
 	private CountDownTimer m_timer;
-	private long m_bigBlind;
-	private long m_timerHours;
-	private long m_timerMinutes;
 	private TextView m_textbigBlind;
 
     /** Called when the activity is first created. */
@@ -42,19 +39,25 @@ public class Launch extends Activity implements OnInitListener, OnClickListener
     public void onClick(View v)
     {
     	// do something   	
-    	if (  v.getId() == R.id.SwitchToMainScreen){
-    		
+    	if (  v.getId() == R.id.SwitchToMainScreen)
+    	{
     		setContentView(R.layout.main);
             m_txtTimer = (TextView)findViewById(R.id.TextTimer);
             m_tts = new TextToSpeech(this, this);
-            //m_tts.setLanguage(Locale.FRANCE);
             String name = getPackageName();
             m_txtTimer.setText(name);
             Log.d(name, "onCreate Called my moma");
             goTimer();
-    	} else{
+    	} 
+    	else
+    	{
     		m_textbigBlind.setText("Button clicked");	
     	}
+    }
+    
+    public void onPause()
+    {
+    	
     }
     
     public void onStop()
@@ -87,7 +90,6 @@ public class Launch extends Activity implements OnInitListener, OnClickListener
      * the foreground and the speech will be set if the
      * application is not running.
      */
-    @SuppressWarnings("unused")
 	private void goTimer()
     {
     	m_timer = new CountDownTimer(5000, 1000)
