@@ -100,7 +100,7 @@ public class ActivitySettings extends Activity implements OnClickListener
 		m_validationErr = isValidBlind(bigBlind); 
 		if (m_validationErr != null)
 			return m_validationErr;
-//
+
 		String mins = m_minutes.getText().toString();
 		m_validationErr = isValidMinutes(mins);
 		if (m_validationErr != null)
