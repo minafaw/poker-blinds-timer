@@ -18,9 +18,6 @@ public class Launch extends Activity implements OnInitListener, OnClickListener
 	private TextView m_txtTimer;
 	private TextToSpeech m_tts;
 	private CountDownTimer m_timer;
-	private long m_bigBlind;
-	private long m_timerHours;
-	private long m_timerMinutes;
 	private TextView m_textbigBlind;
 
     /** Called when the activity is first created. */
