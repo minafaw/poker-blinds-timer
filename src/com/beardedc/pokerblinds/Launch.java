@@ -30,8 +30,8 @@ public class Launch extends Activity implements OnInitListener, OnClickListener
         Button saveButt = (Button)findViewById(R.id.ButtonSave);
         saveButt.setOnClickListener(this);
         
-        Button butSwitchToMain = (Button)findViewById(R.id.SwitchToMainScreen);
-        butSwitchToMain.setOnClickListener(this);
+        //Button butSwitchToMain = (Button)findViewById(R.id.SwitchToMainScreen);
+       // butSwitchToMain.setOnClickListener(this);
 
         m_textbigBlind = (TextView)findViewById(R.id.TextViewSetBigBlind);
     }
@@ -39,7 +39,7 @@ public class Launch extends Activity implements OnInitListener, OnClickListener
     public void onClick(View v)
     {
     	// do something   	
-    	if (  v.getId() == R.id.SwitchToMainScreen)
+    	if (  v.getId() == R.id.ButtonSave)
     	{
     		setContentView(R.layout.main);
             m_txtTimer = (TextView)findViewById(R.id.TextTimer);
