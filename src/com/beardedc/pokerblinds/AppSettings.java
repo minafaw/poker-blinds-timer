@@ -22,6 +22,8 @@ public class AppSettings
 	
 	private static AppSettings	m_settings;
 	
+	SharedPreferences m_sharedPrefs;
+	
 	public static AppSettings getSettings(Context c)
 	{
 		if (m_settings == null)
@@ -40,10 +42,6 @@ public class AppSettings
 	
 	/*************************************************************************/
 	
-	
-	
-	/*************************************************************************/
-	
 	// hide this as we want a Singleton
 	private AppSettings()
 	{
@@ -55,14 +53,24 @@ public class AppSettings
 	{
 		if (c != null)
 		{
-			SharedPreferences settings = 
+			m_sharedPrefs = 
 				c.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE );
 			m_minutes = 
-				settings.getLong(PREFS_KEY_MINUTES, PREF_DEFAULT_MINUTES);
+				m_sharedPrefs.getLong(PREFS_KEY_MINUTES, PREF_DEFAULT_MINUTES);
 			m_initialBigBlind = 
-				settings.getLong(PREFS_KEY_BIG_BLIND, PREF_DEFAULT_BIG_BLIND);
+				m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND, PREF_DEFAULT_BIG_BLIND);
 			m_currentBigBlind = m_initialBigBlind;
 		}
+	}
+	
+	/*************************************************************************/
+	
+	public void save()
+	{
+		SharedPreferences.Editor editor = m_sharedPrefs.edit();
+		editor.putLong(PREFS_KEY_MINUTES, m_minutes);
+		editor.putLong(PREFS_KEY_BIG_BLIND, m_initialBigBlind);
+		editor.commit();
 	}
 	
 	/*************************************************************************/

@@ -1,13 +1,15 @@
 package com.beardedc.pokerblinds;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.TextView;
 
 public class ActivitySettings extends Activity implements OnClickListener
 {
@@ -17,6 +19,12 @@ public class ActivitySettings extends Activity implements OnClickListener
 	private EditText	m_minutes;
 	
 	private String		m_validationErr;
+	
+	/*************************************************************************/
+	
+	private static final int DIALOG_ERR = 0;
+	
+	/*************************************************************************/
 
 	public void onCreate(Bundle savedInstanceState)
 	{
@@ -25,6 +33,25 @@ public class ActivitySettings extends Activity implements OnClickListener
 		super.onCreate(savedInstanceState);
         setContentView(R.layout.settings);
         initControls();
+	}
+	
+	/*************************************************************************/
+	
+	protected Dialog onCreateDialog(int id)
+	{
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		builder.setMessage(m_validationErr)
+		       .setCancelable(false)
+		       .setPositiveButton("Ok", new DialogInterface.OnClickListener() 
+		       {
+		    	   public void onClick(DialogInterface dialog, int id) {
+		                dialog.cancel();
+		           }
+		       });
+
+		AlertDialog alert = builder.create();
+		
+		return alert;
 	}
 	
 	/*************************************************************************/
@@ -52,10 +79,15 @@ public class ActivitySettings extends Activity implements OnClickListener
 	{
 		if (  v.getId() == R.id.ButtonSave)
 		{
-			String s = isValid();
-			Log.d("moo", s);
+			String validIfNull = isValid();
+			if (null != validIfNull)
+			{
+				showDialog(DIALOG_ERR);
+			}
 			// here read the values and if good allow the save
+			m_settings.save();
 		}
+		
 		
 	}
 	
@@ -65,30 +97,53 @@ public class ActivitySettings extends Activity implements OnClickListener
 	{
 		m_validationErr = "";
 		String bigBlind = m_bigBlind.getText().toString();
-		if (isValidBlind(bigBlind) == false)
-		{
-			return "The big blinds must be divisible by 2 and greater than 0";
-		}
-			
-		return bigBlind;
+		m_validationErr = isValidBlind(bigBlind); 
+		if (m_validationErr != null)
+			return m_validationErr;
+//
+		String mins = m_minutes.getText().toString();
+		m_validationErr = isValidMinutes(mins);
+		if (m_validationErr != null)
+			return m_validationErr;
+		
+		m_settings.setMinutes(Long.parseLong(mins));
+		m_settings.setInitalBigblind(Long.parseLong(bigBlind));
+		
+		return null;
 	}
 	
 	/*************************************************************************/
 	
 	// TODO Add code to check range of blinds
-	private boolean isValidBlind(String blind)
+	private String isValidBlind(String blind)
 	{
 		if (blind.equals(""))
 		{
-			m_validationErr = "The big blind must be set";
-			return false;
+			return "The big blind must be set";
 		}
-		//else if ()
+		long l = Long.parseLong(blind);
+		if (l % 2 != 0)
+			return "The big blind must be divisible by 2, i.e. for the small blind :>";
+		else if (l <= 0 )
+			return "The blind blind must be greater than 0";
 				
-		return true;
+		return null;
 	}
 	
+	/*************************************************************************/
 	
+	private String isValidMinutes(String mins)
+	{
+		if (mins.equals(""))
+		{
+			return "The minutes must be set";
+		}
+		long l = Long.parseLong(mins);
+		if (l < 1)
+			return "The minutes must be greater than 0";
+		
+		return null;
+	}
 	
 	/*************************************************************************/
 }
