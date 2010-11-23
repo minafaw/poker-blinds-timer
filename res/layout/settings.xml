@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical">
+<LinearLayout
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal">
+	<TextView android:id="@+id/TextViewSetBigBlind" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" 
+		android:text="Set the big blind"></TextView>
+	<EditText android:text="50" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content"
+		android:id="@+id/TextBlind" 
+		android:inputType="number"></EditText>
+</LinearLayout>
+<LinearLayout
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal">
+	<TextView android:id="@+id/TextViewMinutes" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" 
+		android:text="Minutes"></TextView>
+	<EditText android:text="0" 
+		android:layout_width="wrap_content" 
+		android:layout_height="wrap_content" 
+		android:id="@+id/EditTextMinutes" 
+		android:inputType="number"></EditText>
+</LinearLayout>
+<LinearLayout
+	android:layout_width="fill_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal">
+	<Button android:text="Save" 
+		android:id="@+id/ButtonSave" 
+		android:layout_width="fill_parent" 
+		android:layout_height="wrap_content"></Button>
+</LinearLayout>
+<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/SwitchToMainScreen" android:text="Switch to main screen"></Button>
+</LinearLayout>
