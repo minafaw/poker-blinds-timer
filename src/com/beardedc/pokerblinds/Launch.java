@@ -5,21 +5,22 @@ import android.content.BroadcastReceiver;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.speech.tts.TextToSpeech;
-import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.TextView;
 
-public class Launch extends Activity implements OnInitListener, IReturnFinished
+public class Launch extends Activity implements OnClickListener, IReturnFinished
 {
 	private TextView m_txtTimer;
 	private TextView m_BlindBig;
 	private TextView m_BlindSmall;
-	private TextToSpeech m_tts;
 	private CountdownTimerComplex m_timer;
 	private int m_secondsRemaining;
 	private AppSettings m_settings;
 	private int m_iMultiplierToConvertMinutesToSeconds = 60;
+	private Button m_pause;
 
 	/** Called when the activity is first created. */
 	@Override
@@ -39,6 +40,9 @@ public class Launch extends Activity implements OnInitListener, IReturnFinished
 		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
 		m_BlindBig = (TextView) findViewById(R.id.textViewBigBlind);
 		m_BlindSmall = (TextView) findViewById(R.id.TextViewSmallBlind);
+		
+		m_pause = (Button)findViewById(R.id.ButtonPause);
+		m_pause.setOnClickListener(this);
 		
 		updateBlinds(m_settings);
 		goTimer((int) m_settings.getMinutes() * m_iMultiplierToConvertMinutesToSeconds);
@@ -96,11 +100,6 @@ public class Launch extends Activity implements OnInitListener, IReturnFinished
     
     public void onDestroy()
     {
-    	if (m_tts != null)
-    	{
-	    	m_tts.shutdown();
-	    	m_tts = null;
-    	}
     	if (m_timer != null)
     		m_timer.cancel();
     	Log.d(getPackageName(), "onDestroy");
@@ -118,11 +117,6 @@ public class Launch extends Activity implements OnInitListener, IReturnFinished
     	m_timer.startTiming();
     	
     }
-	
-	public void onInit(int i)
-	{
-		
-	}
 
 	public void jobDone()
 	{	
@@ -148,6 +142,24 @@ public class Launch extends Activity implements OnInitListener, IReturnFinished
 		long[] lVibratePattern = {100,50,100,50, 100,50, 100,50, 100,50, 100,50, 100,50, 100,50, 100,50};
 		v.vibrate(lVibratePattern, -1);
 		*/
+	}
+
+	public void onClick(View v)
+	{
+		if (v.getId() == R.id.ButtonPause)
+		{
+			if (m_timer.bIsTimerRunning == true)
+			{
+				m_secondsRemaining = m_timer.cancel_returnSecondsRemaining();
+				m_pause.setText("press to restart");
+			} else
+			{
+				goTimer(m_secondsRemaining);
+				m_pause.setText("press to pause");
+			}
+			
+		}
+		
 	}
 	
 }

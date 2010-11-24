@@ -7,6 +7,7 @@ import android.widget.TextView;
 
 public class CountdownTimerComplex extends CountDownTimer{
 	static final int m_iMsMultiplier = 1000;
+	public Boolean bIsTimerRunning;
 	int m_iSecondsToCountDown;
 	int m_iSecondsRemaining;
 	IReturnFinished m_callback;
@@ -23,6 +24,7 @@ public class CountdownTimerComplex extends CountDownTimer{
 	public void startTiming()
 	{
 		m_cdt = super.start();
+		bIsTimerRunning = true;
 	}
 	
 	public void onTick (long millisUntilFinished)
@@ -57,12 +59,14 @@ public class CountdownTimerComplex extends CountDownTimer{
 	public void onFinish()
 	{
 		m_textViewToUpdate.setText(getHrsMinsSecFromSec(0));
+		bIsTimerRunning = false;
 		m_callback.jobDone();
 	}
 	
 	public int cancel_returnSecondsRemaining()
 	{
 		super.cancel();
+		bIsTimerRunning = false;
 		return m_iSecondsRemaining;
 	}
 	
