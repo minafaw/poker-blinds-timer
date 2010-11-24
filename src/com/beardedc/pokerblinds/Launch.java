@@ -30,19 +30,13 @@ public class Launch extends Activity implements OnInitListener, OnClickListener
     public void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.settings);
+        setContentView(R.layout.main);
         
         // http://thinkandroid.wordpress.com/2010/01/24/handling-screen-off-and-screen-on-intents/
         IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
         filter.addAction(Intent.ACTION_SCREEN_OFF);
         BroadcastReceiver mReceiver = new ScreenReceiver();
         registerReceiver(mReceiver, filter);
-        
-        Button saveButt = (Button)findViewById(R.id.ButtonSave);
-        saveButt.setOnClickListener(this);
-        
-        //Button butSwitchToMain = (Button)findViewById(R.id.SwitchToMainScreen);
-       // butSwitchToMain.setOnClickListener(this);
 
         m_textbigBlind = (TextView)findViewById(R.id.TextViewSetBigBlind);
     }
