@@ -36,6 +36,14 @@ public class ActivitySettings extends Activity implements OnClickListener
 	}
 	
 	/*************************************************************************/
+	@Override
+	protected void onPrepareDialog (int id, Dialog dialog)
+	{
+		AlertDialog d = (AlertDialog)dialog;
+		d.setMessage(m_validationErr);
+	}
+	
+	/*************************************************************************/
 	
 	protected Dialog onCreateDialog(int id)
 	{
@@ -97,11 +105,13 @@ public class ActivitySettings extends Activity implements OnClickListener
 	{
 		m_validationErr = "";
 		String bigBlind = m_bigBlind.getText().toString();
+		Log.d("Blind", bigBlind);
 		m_validationErr = isValidBlind(bigBlind); 
 		if (m_validationErr != null)
 			return m_validationErr;
 
 		String mins = m_minutes.getText().toString();
+		Log.d("Mins", mins);
 		m_validationErr = isValidMinutes(mins);
 		if (m_validationErr != null)
 			return m_validationErr;
@@ -118,9 +128,8 @@ public class ActivitySettings extends Activity implements OnClickListener
 	private String isValidBlind(String blind)
 	{
 		if (blind.equals(""))
-		{
 			return "The big blind must be set";
-		}
+
 		long l = Long.parseLong(blind);
 		if (l % 2 != 0)
 			return "The big blind must be divisible by 2, i.e. for the small blind :>";
@@ -135,9 +144,8 @@ public class ActivitySettings extends Activity implements OnClickListener
 	private String isValidMinutes(String mins)
 	{
 		if (mins.equals(""))
-		{
 			return "The minutes must be set";
-		}
+
 		long l = Long.parseLong(mins);
 		if (l < 1)
 			return "The minutes must be greater than 0";
