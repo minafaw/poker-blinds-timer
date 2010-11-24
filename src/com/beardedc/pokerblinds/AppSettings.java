@@ -32,7 +32,7 @@ public class AppSettings
 				return null;
 			else
 			{
-				m_settings  = new AppSettings();
+				m_settings = new AppSettings();
 				m_settings.load(c);
 			}
 		}
