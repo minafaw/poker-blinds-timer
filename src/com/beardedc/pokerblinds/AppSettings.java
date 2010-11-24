@@ -65,13 +65,12 @@ public class AppSettings
 	
 	/*************************************************************************/
 	
-	// TODO we need to return a value from the saving of the data
-	public void save()
+	public boolean save()
 	{
 		SharedPreferences.Editor editor = m_sharedPrefs.edit();
 		editor.putLong(PREFS_KEY_MINUTES, m_minutes);
 		editor.putLong(PREFS_KEY_BIG_BLIND, m_initialBigBlind);
-		editor.commit();
+		return editor.commit();
 	}
 	
 	/*************************************************************************/

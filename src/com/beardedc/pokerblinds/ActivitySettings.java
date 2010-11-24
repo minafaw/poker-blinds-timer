@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -94,6 +95,11 @@ public class ActivitySettings extends Activity implements OnClickListener
 			}
 			// here read the values and if good allow the save
 			m_settings.save();
+			
+			// here open the new activity Rob's activity
+			Intent launchIntent = 
+				new Intent(this.getApplicationContext(), Launch.class);
+			startActivity(launchIntent);
 		}
 		
 		
