@@ -65,6 +65,7 @@ public class AppSettings
 	
 	/*************************************************************************/
 	
+	// TODO we need to return a value from the saving of the data
 	public void save()
 	{
 		SharedPreferences.Editor editor = m_sharedPrefs.edit();
