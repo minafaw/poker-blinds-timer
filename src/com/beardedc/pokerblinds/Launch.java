@@ -1,80 +1,75 @@
 package com.beardedc.pokerblinds;
 
-import java.util.Locale;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.CountDownTimer;
 import android.speech.tts.TextToSpeech;
 import android.speech.tts.TextToSpeech.OnInitListener;
 import android.util.Log;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.TextView;
 
-public class Launch extends Activity implements OnInitListener, OnClickListener
+public class Launch extends Activity implements OnInitListener, IReturnFinished
 {
 	private TextView m_txtTimer;
+	private TextView m_BlindBig;
+	private TextView m_BlindSmall;
 	private TextToSpeech m_tts;
 	private CountdownTimerComplex m_timer;
-	private TextView m_textbigBlind;
 	private int m_secondsRemaining;
+	private AppSettings m_settings;
+	private int m_iMultiplierToConvertMinutesToSeconds = 60;
 
-    /** Called when the activity is first created. */
-    @Override
-    public void onCreate(Bundle savedInstanceState)
-    {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.main);
-        
-        // http://thinkandroid.wordpress.com/2010/01/24/handling-screen-off-and-screen-on-intents/
-        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-        filter.addAction(Intent.ACTION_SCREEN_OFF);
-        BroadcastReceiver mReceiver = new ScreenReceiver();
-        registerReceiver(mReceiver, filter);
+	/** Called when the activity is first created. */
+	@Override
+	public void onCreate(Bundle savedInstanceState)
+	{
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.main);
+		
+		// http://thinkandroid.wordpress.com/2010/01/24/handling-screen-off-and-screen-on-intents/
+		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		BroadcastReceiver mReceiver = new ScreenReceiver();
+		registerReceiver(mReceiver, filter);
 
-        m_textbigBlind = (TextView)findViewById(R.id.TextViewSetBigBlind);
-    }
-    
-    public void onClick(View v)
-    {
-    	// do something   	
-    	if (  v.getId() == R.id.ButtonSave)
-    	{
-    		setContentView(R.layout.main);
-            m_txtTimer = (TextView)findViewById(R.id.TextTimer);
-            m_tts = new TextToSpeech(this, this);
-            String name = getPackageName();
-            m_txtTimer.setText(name);
-            Log.d(name, "onCreate Called my moma");
-            goTimer(20);
-    	} 
-    	else
-    	{
-    		m_textbigBlind.setText("Button clicked");	
-    	}
-    }
-    
-    public void onPause()
-    {
-        // when the screen is about to turn off
-        if (ScreenReceiver.wasScreenOn) {
-            // this is the case when onPause() is called by the system due to a screen state change
-        	// update the time remaining from the timerclass.
-        	m_secondsRemaining = m_timer.cancel_returnSecondsRemaining();
-        	
-        	// TODO: start some system alarm thing
-        	//         	int iMinutesRemaining = m_secondsRemaining / 60;
-        	
-            System.out.println("SCREEN TURNED OFF");
-        }
-        super.onPause();
-    }
+		m_settings = AppSettings.getSettings(this.getApplicationContext());
+		
+		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
+		m_BlindBig = (TextView) findViewById(R.id.textViewBigBlind);
+		m_BlindSmall = (TextView) findViewById(R.id.TextViewSmallBlind);
+		
+		updateBlinds(m_settings);
+		goTimer((int) m_settings.getMinutes() * m_iMultiplierToConvertMinutesToSeconds);
+	}
+	
+	private void updateBlinds(AppSettings a)
+	{
+		updateTextView("Big Blind is   : " + a.getCurrentBigBlind(), m_BlindBig);
+		updateTextView("Small Blind is : " + (a.getCurrentBigBlind() /2), m_BlindSmall);
+	}
+	
+	private void updateTextView(String toOutput, TextView toUpdate)
+	{
+		toUpdate.setText(toOutput);
+	}
+
+	public void onPause()
+	{
+		// when the screen is about to turn off
+		if (ScreenReceiver.wasScreenOn) {
+			// this is the case when onPause() is called by the system due to a screen state change
+			// update the time remaining from the timer class.
+			m_secondsRemaining = m_timer.cancel_returnSecondsRemaining();
+			
+			// TODO: start some system alarm thing
+			// int iMinutesRemaining = m_secondsRemaining / 60;
+			
+			System.out.println("SCREEN TURNED OFF");
+		}
+		super.onPause();
+	}
     
     public void onResume()
     {
@@ -119,75 +114,40 @@ public class Launch extends Activity implements OnInitListener, OnClickListener
      */
 	private void goTimer(int secondsToCountDown)
     {
-    	m_timer = new CountdownTimerComplex(secondsToCountDown, m_txtTimer);
+    	m_timer = new CountdownTimerComplex(secondsToCountDown, m_txtTimer, this);
     	m_timer.startTiming();
     	
     }
-    
-    public void onInit(int status)
-    {
-   	
+	
+	public void onInit(int i)
+	{
+		
+	}
 
-    }
-    
-    private class CountdownTimerComplex extends CountDownTimer{
-    	int m_iSecondsToCountDown;
-    	int m_iSecondsRemaining;
-    	static final int m_iMsMultiplier = 1000;
-    	TextView m_textViewToUpdate;
-    	CountDownTimer m_cdt;
-		public CountdownTimerComplex(int secondsToCount, TextView viewToUpdate) {
-			super(secondsToCount * m_iMsMultiplier, m_iMsMultiplier);
-			m_iSecondsToCountDown = secondsToCount;
-			m_textViewToUpdate = viewToUpdate;
-		}
+	public void jobDone()
+	{	
+		// increase blinds
+		m_settings.setCurrentBigBlind( m_settings.getCurrentBigBlind() * 2);
 		
-		public void startTiming()
-		{
-			m_cdt = super.start();
-		}
+		// update the UI
+		updateBlinds(m_settings);
 		
-		public void onTick (long millisUntilFinished)
-		{
-			m_iSecondsRemaining = (int) (millisUntilFinished / m_iMsMultiplier);
-			m_textViewToUpdate.setText("Seconds Remaining: " + m_iSecondsRemaining);
-		}
+		// notify user
+		vibrateThePhone();		
 		
-		public void onFinish()
-		{
-			m_tts.setPitch(1.5f);
-			m_tts.setLanguage(Locale.ENGLISH);
-			m_tts.speak(
-						"Hello how are you today?",
-						android.speech.tts.TextToSpeech.QUEUE_FLUSH,
-						null);
-			m_textViewToUpdate.setText("All done");
-		}
+		// restart timer
+		goTimer((int) m_settings.getMinutes() * m_iMultiplierToConvertMinutesToSeconds);
 		
-		public int cancel_returnSecondsRemaining()
-		{
-			super.cancel();
-			return m_iSecondsRemaining;
-		}
-    	
-    }
-    
-    // http://thinkandroid.wordpress.com/2010/01/24/handling-screen-off-and-screen-on-intents/
-    private static class ScreenReceiver extends BroadcastReceiver 
-    {
-        public static boolean wasScreenOn = true;
-        public void onReceive(Context context, Intent intent)
-        {
-            if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF))
-            {
-                // do whatever you need to do here
-                wasScreenOn = false;
-            } else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON))
-            {
-                // and do whatever you need to do here
-                wasScreenOn = true;
-            }
-        }
-    }
-    
+	}
+	
+	private void vibrateThePhone()
+	{
+		// TODO: justin to complete this section later
+		/*
+		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+		long[] lVibratePattern = {100,50,100,50, 100,50, 100,50, 100,50, 100,50, 100,50, 100,50, 100,50};
+		v.vibrate(lVibratePattern, -1);
+		*/
+	}
+	
 }

@@ -8,4 +8,7 @@
 <TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Poker Blinds Countdown Timer" android:layout_gravity="center_horizontal"></TextView>
 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_gravity="center_horizontal" android:id="@+id/TextTimer" android:includeFontPadding="false" android:text="00:00"></TextView>
 
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/bigBlind" android:id="@+id/textViewBigBlind"></TextView>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/smallBlind" android:id="@+id/TextViewSmallBlind"></TextView>
+<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/ButtonPause" android:text="@+id/Pause Timer"></Button>
 </LinearLayout>
