@@ -93,16 +93,17 @@ public class ActivitySettings extends Activity implements OnClickListener
 			{
 				showDialog(DIALOG_ERR);
 			}
-			// here read the values and if good allow the save
-			m_settings.save();
-			
-			// here open the new activity Rob's activity
-			Intent launchIntent = 
-				new Intent(this.getApplicationContext(), Launch.class);
-			startActivity(launchIntent);
+			else
+			{
+				// here read the values and if good allow the save
+				m_settings.save();
+				
+				// here open the new activity Rob's activity
+				Intent launchIntent = 
+					new Intent(this.getApplicationContext(), Launch.class);
+				startActivity(launchIntent);
+			}
 		}
-		
-		
 	}
 	
 	/*************************************************************************/
