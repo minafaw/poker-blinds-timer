@@ -1,15 +1,15 @@
 package com.beardedc.pokerblinds;
 
-import java.math.RoundingMode;
-
 import android.os.CountDownTimer;
 import android.widget.TextView;
 
-public class CountdownTimerComplex extends CountDownTimer{
+public class CountdownTimerComplex extends CountDownTimer implements IReturnFinished {
 	static final int m_iMsMultiplier = 1000;
-	public Boolean bIsTimerRunning;
-	int m_iSecondsToCountDown;
-	int m_iSecondsRemaining;
+	static final String m_strAlarmBroadcast = "beardedc.pokerBlinksTimer.AlarmAction";
+	static final String m_strAlarmFinished = "beardedc.pokerBlinksTimer.AlarmTimerUp";
+	private Boolean m_bIsTimerRunning;
+	private int m_iSecondsToCountDown;
+	private int m_iSecondsRemaining;
 	IReturnFinished m_callback;
 	TextView m_textViewToUpdate;
 	private CountDownTimer m_cdt;
@@ -21,10 +21,20 @@ public class CountdownTimerComplex extends CountDownTimer{
 		m_callback = passBackObject;
 	}
 	
+	public int getSecondsRemaining()
+	{
+		return m_iSecondsRemaining;
+	}
+	
+	public Boolean isTimerRunning()
+	{
+		return m_bIsTimerRunning;
+	}
+	
 	public void startTiming()
 	{
 		m_cdt = super.start();
-		bIsTimerRunning = true;
+		m_bIsTimerRunning = true;
 	}
 	
 	public void onTick (long millisUntilFinished)
@@ -49,6 +59,7 @@ public class CountdownTimerComplex extends CountDownTimer{
 		return sReturn;
 	}
 	
+	//*************************************************************************
 	private String getDoubleNumberFormat(int i)
 	{
 		if (i == 0) {return "00";}
@@ -56,18 +67,24 @@ public class CountdownTimerComplex extends CountDownTimer{
 		return String.valueOf(i);		
 	}
 	
+	//*************************************************************************
 	public void onFinish()
 	{
 		m_textViewToUpdate.setText(getHrsMinsSecFromSec(0));
-		bIsTimerRunning = false;
+		m_bIsTimerRunning = false;
 		m_callback.jobDone();
 	}
 	
-	public int cancel_returnSecondsRemaining()
+	//*************************************************************************
+	public void pauseTimer()
 	{
 		super.cancel();
-		bIsTimerRunning = false;
-		return m_iSecondsRemaining;
+		m_bIsTimerRunning = false;
+	}
+
+	public void jobDone()
+	{
+		
 	}
 	
 }
