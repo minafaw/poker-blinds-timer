@@ -1,10 +1,16 @@
 package com.beardedc.pokerblinds;
 
+import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
 import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,10 +23,13 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private TextView m_BlindBig;
 	private TextView m_BlindSmall;
 	private CountdownTimerComplex m_timer;
-	private int m_secondsRemaining;
 	private AppSettings m_settings;
 	private int m_iMultiplierToConvertMinutesToSeconds = 60;
 	private Button m_pause;
+	private AlarmManager m_alarmManager; 
+	private PendingIntent m_alarmIntent;
+	private long m_lmiliSecsSinceBoot;
+	
 
 	/** Called when the activity is first created. */
 	@Override
@@ -34,7 +43,18 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		BroadcastReceiver mReceiver = new ScreenReceiver();
 		registerReceiver(mReceiver, filter);
-
+		
+		filter = new IntentFilter(AlarmReceiver.m_strAlarmBroadcast);
+		filter.addAction(AlarmReceiver.m_strAlarmFinished);
+		mReceiver = new AlarmReceiver(this);
+		registerReceiver(mReceiver, filter);
+		
+		try{
+			m_alarmManager = (AlarmManager) this.getSystemService(Context.ALARM_SERVICE);
+		} catch (Exception e){
+			System.out.println("cheese");
+		}
+		
 		m_settings = AppSettings.getSettings(this.getApplicationContext());
 		
 		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
@@ -61,30 +81,60 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 
 	public void onPause()
 	{
-		// when the screen is about to turn off
-		if (ScreenReceiver.wasScreenOn) {
-			// this is the case when onPause() is called by the system due to a screen state change
-			// update the time remaining from the timer class.
-			m_secondsRemaining = m_timer.cancel_returnSecondsRemaining();
-			
-			// TODO: start some system alarm thing
-			// int iMinutesRemaining = m_secondsRemaining / 60;
-			
-			System.out.println("SCREEN TURNED OFF");
+		if (ScreenReceiver.screenSwitchOffEventOccured == true) {
+			m_timer.pauseTimer();
+			startSystemAlarm();
 		}
 		super.onPause();
 	}
-    
+	
     public void onResume()
     {
-        // only when screen turns on
-        if (!ScreenReceiver.wasScreenOn)
+		if (ScreenReceiver.screenSwitchOnEventOccured == true)
         {
-        	goTimer(m_secondsRemaining);
-            System.out.println("SCREEN TURNED ON");
+        	if (m_timer.isTimerRunning() == false){
+        		// the alarm must be running, 
+        		// therefore stop the alarm and work out
+        		// time time remaming to restart the normal timer.
+        		
+        		long lNewSystemTime = SystemClock.elapsedRealtime();
+        		long lDelta = lNewSystemTime - m_lmiliSecsSinceBoot;
+        		int iSecsSpentAsleep = (int) (lDelta / m_timer.m_iMsMultiplier);
+        		int iSecsStillToTime = m_timer.getSecondsRemaining() - iSecsSpentAsleep;
+        		
+        		// kill alarm
+        		m_alarmManager.cancel(m_alarmIntent);
+        		
+        		goTimer(iSecsStillToTime);
+        	}
         }
         super.onResume();
     }
+	
+	public void startSystemAlarm()
+	{
+		int iTypeOfAlarm = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+		//long lmilliSecondsInFuture = m_timer.getSecondsRemaining() * 25;
+		long lmilliSecondsInFuture = m_timer.getSecondsRemaining() * CountdownTimerComplex.m_iMsMultiplier;
+		
+		// store current system time
+		m_lmiliSecsSinceBoot = SystemClock.elapsedRealtime();
+		
+		Intent intentToBroadcast = new Intent();
+		intentToBroadcast.setAction(AlarmReceiver.m_strAlarmFinished);
+		
+		m_alarmIntent = PendingIntent.getBroadcast(
+									this.getApplicationContext(), 
+									1, intentToBroadcast, 
+									PendingIntent.FLAG_ONE_SHOT);
+		
+		try{m_alarmManager.set(iTypeOfAlarm, lmilliSecondsInFuture, m_alarmIntent);}
+		catch(Exception e)
+		{
+			System.out.println("Error Occured \n" + e.getMessage());
+		}
+		
+	}
     
     public void onStop()
     {
@@ -137,24 +187,22 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private void vibrateThePhone()
 	{
 		// TODO: justin to complete this section later
-		/*
 		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
 		long[] lVibratePattern = {100,50,100,50, 100,50, 100,50, 100,50, 100,50, 100,50, 100,50, 100,50};
-		v.vibrate(lVibratePattern, -1);
-		*/
+		v.vibrate(lVibratePattern, 1);
 	}
 
 	public void onClick(View v)
 	{
 		if (v.getId() == R.id.ButtonPause)
 		{
-			if (m_timer.bIsTimerRunning == true)
+			if (m_timer.isTimerRunning() == true)
 			{
-				m_secondsRemaining = m_timer.cancel_returnSecondsRemaining();
+				m_timer.pauseTimer();
 				m_pause.setText("press to restart");
 			} else
 			{
-				goTimer(m_secondsRemaining);
+				goTimer(m_timer.getSecondsRemaining());
 				m_pause.setText("press to pause");
 			}
 			
