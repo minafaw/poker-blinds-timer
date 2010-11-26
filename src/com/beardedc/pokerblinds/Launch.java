@@ -102,7 +102,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 									1, intentToBroadcast, 
 									PendingIntent.FLAG_ONE_SHOT);
 		
-		try{m_alarmManager.set(iTypeOfAlarm, lmilliSecondsInFuture, m_alarmIntent);}
+		try{m_alarmManager.set(iTypeOfAlarm, m_lmiliSecsSinceBoot + lmilliSecondsInFuture, m_alarmIntent);}
 		catch(Exception e)
 		{
 			System.out.println("Error Occured \n" + e.getMessage());
@@ -151,7 +151,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		updateBlinds(m_settings);
 		
 		// notify user
-		vibrateThePhone();		
+		//vibrateThePhone();		
 		
 		// restart timer
 		goTimer((int) m_settings.getMinutes() * m_iMultiplierToConvertMinutesToSeconds);
@@ -214,7 +214,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			updateBlinds(m_settings);
 			
 			// notify user
-			vibrateThePhone();	
+			//vibrateThePhone();	
 			
 			long lmilliSecondsInFuture = (m_settings.getMinutes() * 60) * CountdownTimerComplex.m_iMsMultiplier;
 			startSystemAlarm(lmilliSecondsInFuture);
