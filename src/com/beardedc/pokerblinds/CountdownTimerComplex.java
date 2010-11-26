@@ -24,6 +24,11 @@ public class CountdownTimerComplex extends CountDownTimer{
 		return m_iSecondsRemaining;
 	}
 	
+	public void setSecondsRemaining(int secondsRemaining)
+	{
+		m_iSecondsRemaining = secondsRemaining;
+	}
+	
 	public Boolean isTimerRunning()
 	{
 		return m_bIsTimerRunning;
