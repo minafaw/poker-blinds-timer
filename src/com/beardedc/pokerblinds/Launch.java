@@ -1,6 +1,5 @@
 package com.beardedc.pokerblinds;
 
-import android.Manifest;
 import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
@@ -19,6 +18,8 @@ import android.widget.TextView;
 
 public class Launch extends Activity implements OnClickListener, IReturnFinished
 {
+	static final String m_strAlarmBroadcast = "beardedc.pokerBlinksTimer.AlarmAction";
+	static final String m_strAlarmFinished = "beardedc.pokerBlinksTimer.AlarmTimerUp";
 	private TextView m_txtTimer;
 	private TextView m_BlindBig;
 	private TextView m_BlindSmall;
@@ -41,12 +42,9 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		// http://thinkandroid.wordpress.com/2010/01/24/handling-screen-off-and-screen-on-intents/
 		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
-		BroadcastReceiver mReceiver = new ScreenReceiver();
-		registerReceiver(mReceiver, filter);
-		
-		filter = new IntentFilter(AlarmReceiver.m_strAlarmBroadcast);
 		filter.addAction(AlarmReceiver.m_strAlarmFinished);
-		mReceiver = new AlarmReceiver(this);
+		filter.addAction(AlarmReceiver.m_strAlarmBroadcast);		
+		BroadcastReceiver mReceiver = new GeneralReceiver(this);
 		registerReceiver(mReceiver, filter);
 		
 		try{
@@ -81,41 +79,17 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 
 	public void onPause()
 	{
-		if (ScreenReceiver.screenSwitchOffEventOccured == true) {
-			m_timer.pauseTimer();
-			startSystemAlarm();
-		}
 		super.onPause();
 	}
 	
     public void onResume()
     {
-		if (ScreenReceiver.screenSwitchOnEventOccured == true)
-        {
-        	if (m_timer.isTimerRunning() == false){
-        		// the alarm must be running, 
-        		// therefore stop the alarm and work out
-        		// time time remaming to restart the normal timer.
-        		
-        		long lNewSystemTime = SystemClock.elapsedRealtime();
-        		long lDelta = lNewSystemTime - m_lmiliSecsSinceBoot;
-        		int iSecsSpentAsleep = (int) (lDelta / m_timer.m_iMsMultiplier);
-        		int iSecsStillToTime = m_timer.getSecondsRemaining() - iSecsSpentAsleep;
-        		
-        		// kill alarm
-        		m_alarmManager.cancel(m_alarmIntent);
-        		
-        		goTimer(iSecsStillToTime);
-        	}
-        }
         super.onResume();
     }
 	
-	public void startSystemAlarm()
+	public void startSystemAlarm(long lmilliSecondsInFuture)
 	{
 		int iTypeOfAlarm = AlarmManager.ELAPSED_REALTIME_WAKEUP;
-		//long lmilliSecondsInFuture = m_timer.getSecondsRemaining() * 25;
-		long lmilliSecondsInFuture = m_timer.getSecondsRemaining() * CountdownTimerComplex.m_iMsMultiplier;
 		
 		// store current system time
 		m_lmiliSecsSinceBoot = SystemClock.elapsedRealtime();
@@ -206,6 +180,44 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 				m_pause.setText("press to pause");
 			}
 			
+		}
+		
+	}
+
+	public void intentReceived(String intent) {
+		if (intent.equals(Intent.ACTION_SCREEN_OFF))
+		{
+			m_timer.pauseTimer();
+			long lmilliSecondsInFuture = m_timer.getSecondsRemaining() * CountdownTimerComplex.m_iMsMultiplier;
+			startSystemAlarm(lmilliSecondsInFuture);
+			
+		} else if (intent.equals(Intent.ACTION_SCREEN_ON))
+		{
+        	if (m_timer.isTimerRunning() == false){        		
+        		long lNewSystemTime = SystemClock.elapsedRealtime();
+        		long lDelta = lNewSystemTime - m_lmiliSecsSinceBoot;
+        		int iSecsSpentAsleep = (int) (lDelta / CountdownTimerComplex.m_iMsMultiplier);
+        		int iSecsStillToTime = m_timer.getSecondsRemaining() - iSecsSpentAsleep;
+        		
+        		// kill alarm
+        		m_alarmManager.cancel(m_alarmIntent);
+        		
+        		// start normal user ui
+        		goTimer(iSecsStillToTime);
+        	}
+		} else if (intent.equals(m_strAlarmFinished))
+		{
+			// increase blinds
+			m_settings.setCurrentBigBlind( m_settings.getCurrentBigBlind() * 2);
+			
+			// update the UI
+			updateBlinds(m_settings);
+			
+			// notify user
+			vibrateThePhone();	
+			
+			long lmilliSecondsInFuture = (m_settings.getMinutes() * 60) * CountdownTimerComplex.m_iMsMultiplier;
+			startSystemAlarm(lmilliSecondsInFuture);
 		}
 		
 	}

@@ -3,10 +3,8 @@ package com.beardedc.pokerblinds;
 import android.os.CountDownTimer;
 import android.widget.TextView;
 
-public class CountdownTimerComplex extends CountDownTimer implements IReturnFinished {
+public class CountdownTimerComplex extends CountDownTimer{
 	static final int m_iMsMultiplier = 1000;
-	static final String m_strAlarmBroadcast = "beardedc.pokerBlinksTimer.AlarmAction";
-	static final String m_strAlarmFinished = "beardedc.pokerBlinksTimer.AlarmTimerUp";
 	private Boolean m_bIsTimerRunning;
 	private int m_iSecondsToCountDown;
 	private int m_iSecondsRemaining;
@@ -80,11 +78,5 @@ public class CountdownTimerComplex extends CountDownTimer implements IReturnFini
 	{
 		super.cancel();
 		m_bIsTimerRunning = false;
-	}
-
-	public void jobDone()
-	{
-		
-	}
-	
+	}	
 }
