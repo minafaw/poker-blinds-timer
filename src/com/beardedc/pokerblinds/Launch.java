@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 
 public class Launch extends Activity implements OnClickListener, IReturnFinished
@@ -30,6 +31,8 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private AlarmManager m_alarmManager; 
 	private PendingIntent m_alarmIntent;
 	private long m_lmiliSecsSinceBoot;
+	private EditText m_manualBigBlindAlteration;
+	private Button m_bigBlindOverride;
 	
 
 	/** Called when the activity is first created. */
@@ -58,6 +61,11 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
 		m_BlindBig = (TextView) findViewById(R.id.textViewBigBlind);
 		m_BlindSmall = (TextView) findViewById(R.id.TextViewSmallBlind);
+		
+		m_manualBigBlindAlteration = (EditText) findViewById(R.id.txtBigBlindOverride);
+		
+		m_bigBlindOverride = (Button) findViewById(R.id.butManualBigBlindChange);
+		m_bigBlindOverride.setOnClickListener(this);
 		
 		m_pause = (Button)findViewById(R.id.ButtonPause);
 		m_pause.setOnClickListener(this);
@@ -149,6 +157,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	{	
 		// increase blinds
 		m_settings.setCurrentBigBlind( m_settings.getCurrentBigBlind() * 2);
+		Boolean bSave = m_settings.save();
 		
 		// update the UI
 		updateBlinds(m_settings);
@@ -186,8 +195,17 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 				m_pause.setText("press to pause");
 			}
 			
+		}else if (v.getId() == R.id.butManualBigBlindChange)
+		{
+			// increase blinds
+			String sBigBlindHack = m_manualBigBlindAlteration.getText().toString();
+			long lBigBlind = Long.parseLong(sBigBlindHack);
+			m_settings.setCurrentBigBlind(lBigBlind);
+			Boolean bSave = m_settings.save();
+			
+			// update the UI
+			updateBlinds(m_settings);
 		}
-		
 	}
 
 	public void intentReceived(String intent) {
@@ -216,6 +234,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		{
 			// increase blinds
 			m_settings.setCurrentBigBlind( m_settings.getCurrentBigBlind() * 2);
+			Boolean bSave = m_settings.save();
 			
 			// update the UI
 			updateBlinds(m_settings);
@@ -224,6 +243,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			vibrateThePhone();	
 			
 			long lmilliSecondsInFuture = (m_settings.getMinutes() * 60) * CountdownTimerComplex.m_iMsMultiplier;
+			m_timer.setSecondsRemaining((int) m_settings.getMinutes() * 60);
 			startSystemAlarm(lmilliSecondsInFuture);
 		}
 		

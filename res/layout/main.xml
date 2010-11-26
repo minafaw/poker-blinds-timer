@@ -11,4 +11,7 @@
 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="@string/bigBlind" android:id="@+id/textViewBigBlind"></TextView>
 <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/TextViewSmallBlind" android:text="@string/smallBlind"></TextView>
 <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/ButtonPause" android:text="press to pause"></Button>
+<TextView android:id="@+id/TextView02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manually Set the Big Blind"></TextView>
+<EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/txtBigBlindOverride" android:text="100"></EditText>
+<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/butManualBigBlindChange" android:text="Commit Big Blind Change"></Button>
 </LinearLayout>

@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 public class AppSettings 
 {
 	private long 		m_minutes;
+	private long 		m_minutesRemaining;
 	private long		m_initialBigBlind;
 	private long		m_currentBigBlind;
 	
@@ -14,6 +15,9 @@ public class AppSettings
 	private static final String PREFS_NAME = "PokerTimerPrefs";
 	private static final String PREFS_KEY_MINUTES = "Minutes Blinds Up";
 	private static final String PREFS_KEY_BIG_BLIND = "Big Blinds";
+	private static final String PREFS_KEY_MINUTES_REMAINING = "MinutesRemaining";
+	private static final String PREFS_KEY_BIG_BLIND_CURRENT = "Big Blind Current";
+	
 	
 	private static final long PREF_DEFAULT_MINUTES = 60;
 	private static final long PREF_DEFAULT_BIG_BLIND = 50;
@@ -53,13 +57,11 @@ public class AppSettings
 	{
 		if (c != null)
 		{
-			m_sharedPrefs = 
-				c.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE );
-			m_minutes = 
-				m_sharedPrefs.getLong(PREFS_KEY_MINUTES, PREF_DEFAULT_MINUTES);
-			m_initialBigBlind = 
-				m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND, PREF_DEFAULT_BIG_BLIND);
-			m_currentBigBlind = m_initialBigBlind;
+			m_sharedPrefs =	c.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE );
+			m_minutes = m_sharedPrefs.getLong(PREFS_KEY_MINUTES, PREF_DEFAULT_MINUTES);
+			m_minutesRemaining = m_sharedPrefs.getLong(PREFS_KEY_MINUTES_REMAINING, PREF_DEFAULT_MINUTES);
+			m_initialBigBlind = m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND, PREF_DEFAULT_BIG_BLIND);
+			m_currentBigBlind = m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND_CURRENT, PREF_DEFAULT_BIG_BLIND);
 		}
 	}
 	
@@ -70,6 +72,8 @@ public class AppSettings
 		SharedPreferences.Editor editor = m_sharedPrefs.edit();
 		editor.putLong(PREFS_KEY_MINUTES, m_minutes);
 		editor.putLong(PREFS_KEY_BIG_BLIND, m_initialBigBlind);
+		editor.putLong(PREFS_KEY_BIG_BLIND_CURRENT, m_currentBigBlind);
+		editor.putLong(PREFS_KEY_MINUTES_REMAINING, m_minutesRemaining);
 		return editor.commit();
 	}
 	
@@ -83,6 +87,16 @@ public class AppSettings
 	public void setMinutes(long m_minutes)
 	{
 		this.m_minutes = m_minutes;
+	}
+	
+	public long getMinutesRemaining()
+	{
+		return m_minutesRemaining;
+	}
+
+	public void setMinutesRemaining(long m_minutes)
+	{
+		this.m_minutesRemaining = m_minutes;
 	}
 	
 	/*************************************************************************/
