@@ -64,6 +64,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		
 		updateBlinds(m_settings);
 		goTimer((int) m_settings.getMinutes() * m_iMultiplierToConvertMinutesToSeconds);
+		
 	}
 	
 	private void updateBlinds(AppSettings a)
@@ -90,6 +91,8 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	public void startSystemAlarm(long lmilliSecondsInFuture)
 	{
 		int iTypeOfAlarm = AlarmManager.ELAPSED_REALTIME_WAKEUP;
+		
+
 		
 		// store current system time
 		m_lmiliSecsSinceBoot = SystemClock.elapsedRealtime();
@@ -151,7 +154,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		updateBlinds(m_settings);
 		
 		// notify user
-		//vibrateThePhone();		
+		vibrateThePhone();		
 		
 		// restart timer
 		goTimer((int) m_settings.getMinutes() * m_iMultiplierToConvertMinutesToSeconds);
@@ -162,8 +165,11 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	{
 		// TODO: justin to complete this section later
 		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-		long[] lVibratePattern = {100,50,100,50, 100,50, 100,50, 100,50, 100,50, 100,50, 100,50, 100,50};
-		v.vibrate(lVibratePattern, 1);
+		long[] lVibratePattern = {100,500,100,500, 100,500, 100,500, 100,500, 
+				100,500, 100,500, 100,500, 100,500,
+				100,500, 100,500, 100,500, 100,500,
+				100,500, 100,500, 100,500, 100,500};
+		v.vibrate(lVibratePattern, -1);
 	}
 
 	public void onClick(View v)
@@ -189,6 +195,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		{
 			m_timer.pauseTimer();
 			long lmilliSecondsInFuture = m_timer.getSecondsRemaining() * CountdownTimerComplex.m_iMsMultiplier;
+			m_timer.setSecondsRemaining(m_timer.getSecondsRemaining());
 			startSystemAlarm(lmilliSecondsInFuture);
 			
 		} else if (intent.equals(Intent.ACTION_SCREEN_ON))
@@ -214,7 +221,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			updateBlinds(m_settings);
 			
 			// notify user
-			//vibrateThePhone();	
+			vibrateThePhone();	
 			
 			long lmilliSecondsInFuture = (m_settings.getMinutes() * 60) * CountdownTimerComplex.m_iMsMultiplier;
 			startSystemAlarm(lmilliSecondsInFuture);
