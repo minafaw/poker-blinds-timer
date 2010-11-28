@@ -14,6 +14,6 @@ public class GeneralReceiver extends BroadcastReceiver
 	
 	public void onReceive(Context context, Intent i)
 	{
-		m_irf.intentReceived(i.getAction());
+		m_irf.intentReceived(i);
 	}
 }
