@@ -151,6 +151,9 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			// update the UI
 			updateBlinds(m_settings);
 			
+			// update the timer to zero values
+        	m_txtTimer.setText(0);
+			
 			// notify user
 			// vibrateThePhone();
 			
