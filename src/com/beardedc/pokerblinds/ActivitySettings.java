@@ -124,9 +124,7 @@ public class ActivitySettings extends Activity implements OnClickListener
 			return m_validationErr;
 		
 		m_settings.setMinutes(Long.parseLong(mins));
-		m_settings.setMinutesRemaining(Long.parseLong(mins));
 		m_settings.setInitalBigblind(Long.parseLong(bigBlind));
-		m_settings.setCurrentBigBlind(Long.parseLong(bigBlind));
 		
 		return null;
 	}
