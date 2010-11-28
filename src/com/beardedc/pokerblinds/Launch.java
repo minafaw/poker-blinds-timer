@@ -152,7 +152,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			updateBlinds(m_settings);
 			
 			// notify user
-			vibrateThePhone();
+			// vibrateThePhone();
 			
 			// start the timer again
 			m_timer.startTiming((int) m_settings.getMinutes() * CountDownTimerComplex.m_iMultiplierMinutesToSeconds);
