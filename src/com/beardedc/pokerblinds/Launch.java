@@ -24,7 +24,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private TextView m_txtTimer;
 	private TextView m_BlindBig;
 	private TextView m_BlindSmall;
-	private CountdownTimerComplex m_timer;
+	private CountDownTimerComplex m_timer;
 	private AppSettings m_settings;
 	private int m_iMultiplierToConvertMinutesToSeconds = 60;
 	private Button m_pause;
@@ -148,7 +148,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
      */
 	private void goTimer(int secondsToCountDown)
     {
-    	m_timer = new CountdownTimerComplex(secondsToCountDown, m_txtTimer, this);
+    	m_timer = new CountDownTimerComplex(secondsToCountDown, m_txtTimer, this);
     	m_timer.startTiming();
     	
     }
@@ -212,7 +212,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		if (intent.equals(Intent.ACTION_SCREEN_OFF))
 		{
 			m_timer.pauseTimer();
-			long lmilliSecondsInFuture = m_timer.getSecondsRemaining() * CountdownTimerComplex.m_iMsMultiplier;
+			long lmilliSecondsInFuture = m_timer.getSecondsRemaining() * CountDownTimerComplex.m_iMsMultiplier;
 			m_timer.setSecondsRemaining(m_timer.getSecondsRemaining());
 			startSystemAlarm(lmilliSecondsInFuture);
 			
@@ -221,7 +221,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
         	if (m_timer.isTimerRunning() == false){        		
         		long lNewSystemTime = SystemClock.elapsedRealtime();
         		long lDelta = lNewSystemTime - m_lmiliSecsSinceBoot;
-        		int iSecsSpentAsleep = (int) (lDelta / CountdownTimerComplex.m_iMsMultiplier);
+        		int iSecsSpentAsleep = (int) (lDelta / CountDownTimerComplex.m_iMsMultiplier);
         		int iSecsStillToTime = m_timer.getSecondsRemaining() - iSecsSpentAsleep;
         		
         		// kill alarm
@@ -242,7 +242,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			// notify user
 			vibrateThePhone();	
 			
-			long lmilliSecondsInFuture = (m_settings.getMinutes() * 60) * CountdownTimerComplex.m_iMsMultiplier;
+			long lmilliSecondsInFuture = (m_settings.getMinutes() * 60) * CountDownTimerComplex.m_iMsMultiplier;
 			m_timer.setSecondsRemaining((int) m_settings.getMinutes() * 60);
 			startSystemAlarm(lmilliSecondsInFuture);
 		}
