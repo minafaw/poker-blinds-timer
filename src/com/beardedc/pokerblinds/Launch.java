@@ -59,7 +59,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		
 		updateBlinds(m_settings);
 
-		m_timer.startTiming((int) m_settings.getMinutes() * CountDownTimerComplex.m_iMultiplierMinutesToSeconds);
+		m_timer.startTiming((int) m_settings.getSecondsRemaining());
 	}
 	
 	//*************************************************************************
@@ -139,6 +139,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		} else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON))
 		{
         	m_timer.switchModeToCountdown();
+        	m_txtTimer.setText(m_timer.getTimeRemainingUIFormat());
 		} else if (intent.getAction().equals(CountDownTimerComplex.BROADCAST_MESSAGE_TICK))
 		{
 			m_txtTimer.setText(m_timer.getTimeRemainingUIFormat());
@@ -146,7 +147,6 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		{
 			// increase blinds
 			m_settings.setCurrentBigBlind( m_settings.getCurrentBigBlind() * 2);
-			m_settings.save();
 			
 			// update the UI
 			updateBlinds(m_settings);
@@ -164,16 +164,16 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
      * make sure any lingering alarms are cancelled
      */
     public void onDestroy()
-    {
+    {    	
     	if (m_timer != null) m_timer.destroy();
     	super.onDestroy();
     }
     
-	public void onPause(){super.onPause();}
-	
-    public void onResume(){super.onResume();}
+    public void onPause()
+    {
+    	m_settings.setSecondsRemaining(m_timer.getTimeRemainingInSeconds());
+    	m_settings.save();
+    	super.onPause();
+    }
     
-    public void onStop(){super.onStop();}
-    
-    public void onRestart(){super.onRestart();}
 }

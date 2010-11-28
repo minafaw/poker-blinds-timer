@@ -6,7 +6,7 @@ import android.content.SharedPreferences;
 public class AppSettings 
 {
 	private long 		m_minutes;
-	private long 		m_minutesRemaining;
+	private long 		m_SecsRemaining;
 	private long		m_initialBigBlind;
 	private long		m_currentBigBlind;
 	
@@ -15,7 +15,7 @@ public class AppSettings
 	private static final String PREFS_NAME = "PokerTimerPrefs";
 	private static final String PREFS_KEY_MINUTES = "Minutes Blinds Up";
 	private static final String PREFS_KEY_BIG_BLIND = "Big Blinds";
-	private static final String PREFS_KEY_MINUTES_REMAINING = "MinutesRemaining";
+	private static final String PREFS_KEY_SECONDS_REMAINING = "Seconds Remaining";
 	private static final String PREFS_KEY_BIG_BLIND_CURRENT = "Big Blind Current";
 	
 	
@@ -59,7 +59,7 @@ public class AppSettings
 		{
 			m_sharedPrefs =	c.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE );
 			m_minutes = m_sharedPrefs.getLong(PREFS_KEY_MINUTES, PREF_DEFAULT_MINUTES);
-			m_minutesRemaining = m_sharedPrefs.getLong(PREFS_KEY_MINUTES_REMAINING, PREF_DEFAULT_MINUTES);
+			m_SecsRemaining = m_sharedPrefs.getLong(PREFS_KEY_SECONDS_REMAINING, PREF_DEFAULT_MINUTES);
 			m_initialBigBlind = m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND, PREF_DEFAULT_BIG_BLIND);
 			m_currentBigBlind = m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND_CURRENT, PREF_DEFAULT_BIG_BLIND);
 		}
@@ -73,7 +73,7 @@ public class AppSettings
 		editor.putLong(PREFS_KEY_MINUTES, m_minutes);
 		editor.putLong(PREFS_KEY_BIG_BLIND, m_initialBigBlind);
 		editor.putLong(PREFS_KEY_BIG_BLIND_CURRENT, m_currentBigBlind);
-		editor.putLong(PREFS_KEY_MINUTES_REMAINING, m_minutesRemaining);
+		editor.putLong(PREFS_KEY_SECONDS_REMAINING, m_SecsRemaining);
 		return editor.commit();
 	}
 	
@@ -87,16 +87,18 @@ public class AppSettings
 	public void setMinutes(long m_minutes)
 	{
 		this.m_minutes = m_minutes;
+		setSecondsRemaining(m_minutes 
+							* CountDownTimerComplex.m_iMultiplierMinutesToSeconds);
 	}
 	
-	public long getMinutesRemaining()
+	public long getSecondsRemaining()
 	{
-		return m_minutesRemaining;
+		return m_SecsRemaining;
 	}
 
-	public void setMinutesRemaining(long m_minutes)
+	public void setSecondsRemaining(long msRemaining)
 	{
-		this.m_minutesRemaining = m_minutes;
+		this.m_SecsRemaining = msRemaining;
 	}
 	
 	/*************************************************************************/
@@ -109,6 +111,7 @@ public class AppSettings
 	public void setInitalBigblind(long bigblind)
 	{
 		m_initialBigBlind = bigblind;
+		setCurrentBigBlind(bigblind);
 	}
 	
 	/*************************************************************************/

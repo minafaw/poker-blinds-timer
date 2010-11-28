@@ -46,6 +46,18 @@ public class CountDownTimerComplex{
 	}
 	
 	//*************************************************************************
+	public long getTimeRemainingInSeconds()
+	{
+		return (int) m_milliRemainingToTime / m_iMultiplierMilli;
+	}
+	
+	//*************************************************************************
+	public long getTimeRemainingInMilliSeconds()
+	{
+		return m_milliRemainingToTime;
+	}
+	
+	//*************************************************************************
 	public Boolean startTiming(int secondsToCount)
 	{
 		
