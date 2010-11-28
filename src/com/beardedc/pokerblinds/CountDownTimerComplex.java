@@ -34,12 +34,6 @@ public class CountDownTimerComplex{
 	}
 	
 	//*************************************************************************
-	public long getSecondsRemaining()
-	{
-		return (int) m_milliRemainingToTime / m_iMultiplierMilli;
-	}
-	
-	//*************************************************************************
 	public Boolean getIsTimerRunning()
 	{
 		return m_bIsTimerRunning;
@@ -75,7 +69,7 @@ public class CountDownTimerComplex{
 	 */
 	public void switchModeToAlarm()
 	{
-		m_bUseCountdownTimer = true;
+		m_bUseCountdownTimer = false;
 		if (m_bIsTimerRunning == false) return;
 		
 		cancelCountdownTimer();
@@ -88,14 +82,14 @@ public class CountDownTimerComplex{
 	 */
 	public void switchModeToCountdown()
 	{
-		m_bUseCountdownTimer = false;
+		m_bUseCountdownTimer = true;
 		if (m_bIsTimerRunning == false) return;
 		
 		// work out how long the alarm was timing for
-		long lDelta = SystemClock.elapsedRealtime() - m_milliSecsRelativeToAlarmStart;
+		m_milliRemainingToTime = m_milliRemainingToTime - ( SystemClock.elapsedRealtime() - m_milliSecsRelativeToAlarmStart);
 		
 		cancelAlarmTimer();
-		startCountdownTimer(lDelta);
+		startCountdownTimer(m_milliRemainingToTime);
 	}	
 	
 	//*************************************************************************
