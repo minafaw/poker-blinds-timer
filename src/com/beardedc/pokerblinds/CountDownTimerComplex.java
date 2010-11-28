@@ -12,7 +12,6 @@ public class CountDownTimerComplex{
 	final static String BROADCAST_MESSAGE_COMPLETE = "beardedc.pokerBlinksTimer.timerComplete";
 	final static int m_iMultiplierMilli = 1000;
 	final static int m_iMultiplierMinutesToSeconds = 60;
-	final static int m_iMultiplierSecondsInHour = 3600;
 	
 	private Boolean m_bIsTimerRunning = false;
 	private Boolean m_bUseCountdownTimer = true;
@@ -42,7 +41,7 @@ public class CountDownTimerComplex{
 	//*************************************************************************
 	public String getTimeRemainingUIFormat()
 	{
-		return getHrsMinsSecFromSec(m_milliRemainingToTime);
+		return getHrsMinsSecFromMilliSec(m_milliRemainingToTime);		
 	}
 	
 	//*************************************************************************
@@ -196,15 +195,16 @@ public class CountDownTimerComplex{
 	}
 
 	//*************************************************************************
-	private String getHrsMinsSecFromSec(long milliSecs)
+	private String getHrsMinsSecFromMilliSec(long milliSecs)
 	{
 		String sReturn = "Time Remaining: ";
 		if (milliSecs == 0){return sReturn + "00:00:00";}
 		
 		long seconds = milliSecs / m_iMultiplierMilli;
-		int ihrs = (int) seconds / m_iMultiplierSecondsInHour;
-		int iMins = (int) ((seconds % m_iMultiplierSecondsInHour) / m_iMultiplierMinutesToSeconds);
-		int iSecs = (int) ((seconds % m_iMultiplierSecondsInHour) % m_iMultiplierMinutesToSeconds);
+		long secondsInHour = m_iMultiplierMinutesToSeconds * m_iMultiplierMinutesToSeconds;
+		int ihrs = (int) (seconds / secondsInHour);
+		int iMins = (int) ((seconds % secondsInHour) / m_iMultiplierMinutesToSeconds);
+		int iSecs = (int) ((seconds % secondsInHour) % m_iMultiplierMinutesToSeconds);
 		
 		sReturn = sReturn  
 					+ getDoubleNumberFormat(ihrs) + ":" 

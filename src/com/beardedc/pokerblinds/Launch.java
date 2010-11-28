@@ -152,7 +152,8 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			updateBlinds(m_settings);
 			
 			// update the timer to zero values
-        	m_txtTimer.setText(0);
+			String sUpdateValue = m_timer.getTimeRemainingUIFormat();
+			m_txtTimer.setText(sUpdateValue);
 			
 			// notify user
 			// vibrateThePhone();
