@@ -9,6 +9,7 @@ public class AppSettings
 	private long 		m_SecsRemaining;
 	private long		m_initialBigBlind;
 	private long		m_currentBigBlind;
+	private int			m_iVibrateNumberOfTimes;
 	
 	/*************************************************************************/
 	
@@ -17,10 +18,11 @@ public class AppSettings
 	private static final String PREFS_KEY_BIG_BLIND = "Big Blinds";
 	private static final String PREFS_KEY_SECONDS_REMAINING = "Seconds Remaining";
 	private static final String PREFS_KEY_BIG_BLIND_CURRENT = "Big Blind Current";
-	
+	private static final String PREFS_KEY_VIBRATE_NUMBER = "number of times to vibrate";
 	
 	private static final long PREF_DEFAULT_MINUTES = 60;
 	private static final long PREF_DEFAULT_BIG_BLIND = 50;
+	private static final int PREF_DEFAULT_VIBRATE_TIMES = 8;
 	
 	/*************************************************************************/
 	
@@ -62,6 +64,7 @@ public class AppSettings
 			m_SecsRemaining = m_sharedPrefs.getLong(PREFS_KEY_SECONDS_REMAINING, PREF_DEFAULT_MINUTES);
 			m_initialBigBlind = m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND, PREF_DEFAULT_BIG_BLIND);
 			m_currentBigBlind = m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND_CURRENT, PREF_DEFAULT_BIG_BLIND);
+			m_iVibrateNumberOfTimes = m_sharedPrefs.getInt(PREFS_KEY_VIBRATE_NUMBER, PREF_DEFAULT_VIBRATE_TIMES);
 		}
 	}
 	
@@ -74,6 +77,7 @@ public class AppSettings
 		editor.putLong(PREFS_KEY_BIG_BLIND, m_initialBigBlind);
 		editor.putLong(PREFS_KEY_BIG_BLIND_CURRENT, m_currentBigBlind);
 		editor.putLong(PREFS_KEY_SECONDS_REMAINING, m_SecsRemaining);
+		editor.putInt(PREFS_KEY_VIBRATE_NUMBER, m_iVibrateNumberOfTimes);
 		return editor.commit();
 	}
 	
@@ -127,5 +131,15 @@ public class AppSettings
 	}
 		
 	/*************************************************************************/
+	
+	public int getVibrateRepeat()
+	{
+		return m_iVibrateNumberOfTimes;
+	}
+	
+	public void setVibrateRepeat(int iRepeatNumber)
+	{
+		m_iVibrateNumberOfTimes = iRepeatNumber;
+	}
 	
 }

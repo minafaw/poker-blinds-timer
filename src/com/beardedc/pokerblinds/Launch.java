@@ -87,13 +87,21 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
      */
 	private void vibrateThePhone()
 	{
-		// TODO: justin to complete this section later
 		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-		long[] lVibratePattern = {100,500,100,500, 100,500, 100,500, 100,500, 
-				100,500, 100,500, 100,500, 100,500,
-				100,500, 100,500, 100,500, 100,500,
-				100,500, 100,500, 100,500, 100,500};
+		long[] lVibratePattern = new long[m_settings.getVibrateRepeat() *2];
+		int iMilliSeconds;
+		for (int i = 0; i < (m_settings.getVibrateRepeat() * 2); i++)
+		{
+			if (isOdd(i)) {iMilliSeconds = 100;}
+			else {iMilliSeconds = 500;}
+			lVibratePattern[i] = iMilliSeconds;
+		}
 		v.vibrate(lVibratePattern, -1);
+	}
+	
+	private boolean isOdd(int i)
+	{
+		return ((i % 1) == 1);
 	}
 
 	//*************************************************************************
@@ -156,7 +164,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			m_txtTimer.setText(sUpdateValue);
 			
 			// notify user
-			// vibrateThePhone();
+			vibrateThePhone();
 			
 			// start the timer again
 			m_timer.startTiming((int) m_settings.getMinutes() * CountDownTimerComplex.m_iMultiplierMinutesToSeconds);

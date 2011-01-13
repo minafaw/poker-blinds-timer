@@ -11,15 +11,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
-public class ActivitySettings extends Activity implements OnClickListener
+public class ActivitySettings extends Activity implements OnClickListener, OnSeekBarChangeListener
 {
 	private AppSettings m_settings;
 	
 	private EditText	m_bigBlind;
 	private EditText	m_minutes;
-	
 	private String		m_validationErr;
+	private SeekBar		m_seekBarVibrate;
+	private int			m_iVibrateTimes;
 	
 	/*************************************************************************/
 	
@@ -78,6 +81,9 @@ public class ActivitySettings extends Activity implements OnClickListener
         m_bigBlind = (EditText)findViewById(R.id.EditTextBlind);
         m_bigBlind.setText(bigBlind.toString());
         
+        m_seekBarVibrate = (SeekBar) findViewById(R.id.seekBarVibrate);
+        m_seekBarVibrate.setOnSeekBarChangeListener(this);
+        
         Button saveButt = (Button)findViewById(R.id.ButtonSave);
         saveButt.setOnClickListener(this);
 	}
@@ -125,6 +131,7 @@ public class ActivitySettings extends Activity implements OnClickListener
 		
 		m_settings.setMinutes(Long.parseLong(mins));
 		m_settings.setInitalBigblind(Long.parseLong(bigBlind));
+		m_settings.setVibrateRepeat(m_iVibrateTimes);
 		
 		return null;
 	}
@@ -158,6 +165,30 @@ public class ActivitySettings extends Activity implements OnClickListener
 			return "The minutes must be greater than 0";
 		
 		return null;
+	}
+
+	public void onProgressChanged(SeekBar seekBar, int progress,
+			boolean fromUser) {
+		if (seekBar.getId() == m_seekBarVibrate.getId())
+		{
+			// update the variable 
+			//
+		}
+		
+	}
+
+	public void onStartTrackingTouch(SeekBar seekBar) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	public void onStopTrackingTouch(SeekBar seekBar) 
+	{
+		if (seekBar.getId() == m_seekBarVibrate.getId()) 
+		{
+			// update the value we now have stored
+			m_iVibrateTimes = seekBar.getProgress();
+		}
 	}
 	
 	/*************************************************************************/
