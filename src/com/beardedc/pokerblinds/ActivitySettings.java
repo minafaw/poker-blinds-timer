@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.Toast;
 
 public class ActivitySettings extends Activity implements OnClickListener, OnSeekBarChangeListener
 {
@@ -167,20 +168,9 @@ public class ActivitySettings extends Activity implements OnClickListener, OnSee
 		return null;
 	}
 
-	public void onProgressChanged(SeekBar seekBar, int progress,
-			boolean fromUser) {
-		if (seekBar.getId() == m_seekBarVibrate.getId())
-		{
-			// update the variable 
-			//
-		}
-		
-	}
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {}
 
-	public void onStartTrackingTouch(SeekBar seekBar) {
-		// TODO Auto-generated method stub
-		
-	}
+	public void onStartTrackingTouch(SeekBar seekBar) {}
 
 	public void onStopTrackingTouch(SeekBar seekBar) 
 	{
@@ -188,6 +178,17 @@ public class ActivitySettings extends Activity implements OnClickListener, OnSee
 		{
 			// update the value we now have stored
 			m_iVibrateTimes = seekBar.getProgress();
+			
+			// show value to user
+			try
+			{
+				CharSequence cs = "Vibrate set to: " + String.valueOf(m_iVibrateTimes);
+				Toast.makeText(this.getApplicationContext(), cs, Toast.LENGTH_SHORT).show();
+			} catch (Exception e)
+			{
+				return;
+			}
+			
 		}
 	}
 	
