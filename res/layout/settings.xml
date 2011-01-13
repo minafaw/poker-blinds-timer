@@ -31,6 +31,7 @@
 		android:layout_height="wrap_content" 
 		android:id="@+id/EditTextMinutes" 
 		android:inputType="number"></EditText>
+<HorizontalScrollView android:id="@+id/HorizontalScrollView02" android:layout_width="wrap_content" android:layout_height="wrap_content"></HorizontalScrollView>
 </LinearLayout>
 <LinearLayout
 	android:layout_width="fill_parent"
@@ -41,4 +42,11 @@
 		android:layout_width="fill_parent" 
 		android:layout_height="wrap_content"></Button>
 </LinearLayout>
+<TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Set the number of vibrates that will happen when timer runs out:"></TextView><SeekBar android:layout_height="wrap_content" android:id="@+id/seekBarVibrate" android:max="25" android:layout_width="fill_parent"></SeekBar><HorizontalScrollView android:id="@+id/HorizontalScrollView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></HorizontalScrollView>
+
+
+
+
+
+
 </LinearLayout>
