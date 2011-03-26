@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	android:orientation="vertical">
+	
+	<LinearLayout
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+		
+		<TextView android:id="@+id/TextViewSetBigBlind" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" 
+			android:text="Set the big blind"></TextView>
+		<EditText android:text="50" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content"
+			android:id="@+id/EditTextBlind" 
+			android:inputType="number"></EditText>
+	</LinearLayout>
+	
+	<LinearLayout		
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="horizontal">
+			
+		<TextView android:id="@+id/TextViewMinutes" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" 
+			android:text="Minutes"></TextView>
+			
+		<EditText android:text="0" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content" 
+			android:id="@+id/EditTextMinutes" 
+			android:inputType="number"></EditText>
+	</LinearLayout>
+
+	<LinearLayout
+		android:layout_marginBottom="50dip" 
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:orientation="vertical">
+		
+		<TextView android:id="@+id/TextView01" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Set the number of vibrates that will happen when timer runs out:"></TextView>
+		<SeekBar android:layout_height="wrap_content" android:id="@+id/seekBarVibrate" android:max="25" android:layout_width="fill_parent"></SeekBar><HorizontalScrollView android:id="@+id/HorizontalScrollView01" android:layout_width="wrap_content" android:layout_height="wrap_content"></HorizontalScrollView>
+	</LinearLayout>
+
+	
+	<LinearLayout 
+		android:gravity="bottom|right" 
+		android:layout_height="fill_parent" 
+		android:layout_width="fill_parent">
+		<Button 
+			android:text="Save Settings" 
+			android:id="@+id/ButtonSave" 
+			android:layout_width="wrap_content" 
+			android:layout_height="wrap_content">
+		</Button>   
+	</LinearLayout>
+</LinearLayout>
+
+
