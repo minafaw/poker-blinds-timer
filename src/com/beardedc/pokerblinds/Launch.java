@@ -22,7 +22,6 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private Button m_pause;
 	private EditText m_manualBigBlindAlteration;
 	private Button m_bigBlindOverride;
-	
 
 	//*************************************************************************
 	/**
@@ -33,14 +32,19 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		// http://thinkandroid.wordpress.com/2010/01/24/handling-screen-off-and-screen-on-intents/
-		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
-		filter.addAction(Intent.ACTION_SCREEN_OFF);
-		filter.addAction(CountDownTimerComplex.BROADCAST_MESSAGE_TICK);
-		filter.addAction(CountDownTimerComplex.BROADCAST_MESSAGE_COMPLETE);		
-		BroadcastReceiver mReceiver = new GeneralReceiver(this);
-		registerReceiver(mReceiver, filter);
+		setupIntents();
 		
+		setupUI();
+		
+		m_timer = new CountDownTimerComplex(this.getApplicationContext());
+		
+		updateBlinds(m_settings);
+
+		m_timer.startTiming((int) m_settings.getSecondsRemaining());
+	}
+
+	private void setupUI() 
+	{
 		m_settings = AppSettings.getSettings(this.getApplicationContext());
 		
 		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
@@ -54,12 +58,17 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		
 		m_pause = (Button)findViewById(R.id.ButtonPause);
 		m_pause.setOnClickListener(this);
-		
-		m_timer = new CountDownTimerComplex(this.getApplicationContext());
-		
-		updateBlinds(m_settings);
+	}
 
-		m_timer.startTiming((int) m_settings.getSecondsRemaining());
+	// http://thinkandroid.wordpress.com/2010/01/24/handling-screen-off-and-screen-on-intents/
+	private void setupIntents() 
+	{
+		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		filter.addAction(CountDownTimerComplex.BROADCAST_MESSAGE_TICK);
+		filter.addAction(CountDownTimerComplex.BROADCAST_MESSAGE_COMPLETE);		
+		BroadcastReceiver mReceiver = new GeneralReceiver(this);
+		registerReceiver(mReceiver, filter);
 	}
 	
 	//*************************************************************************
@@ -88,9 +97,10 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private void vibrateThePhone()
 	{
 		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-		long[] lVibratePattern = new long[m_settings.getVibrateRepeat() *2];
+		long lVibratePattern[] = new long[m_settings.getVibrateRepeat() *2];
 		int iMilliSeconds;
-		for (int i = 0; i < (m_settings.getVibrateRepeat() * 2); i++)
+		int max = m_settings.getVibrateRepeat() * 2;
+		for (int i = 0; i < max; i++)
 		{
 			if (isOdd(i)) {iMilliSeconds = 100;}
 			else {iMilliSeconds = 500;}
