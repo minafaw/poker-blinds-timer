@@ -31,6 +31,7 @@ public class ActivitySettings extends Activity implements OnClickListener, OnSee
 	
 	/*************************************************************************/
 
+	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		m_settings = AppSettings.getSettings(this.getApplicationContext());
@@ -50,6 +51,7 @@ public class ActivitySettings extends Activity implements OnClickListener, OnSee
 	
 	/*************************************************************************/
 	
+	@Override
 	protected Dialog onCreateDialog(int id)
 	{
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);

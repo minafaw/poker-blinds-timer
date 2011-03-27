@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Launch extends Activity implements OnClickListener, IReturnFinished
 {
@@ -22,54 +23,49 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private Button m_pause;
 	private EditText m_manualBigBlindAlteration;
 	private Button m_bigBlindOverride;
-	private String pauseText, startText;
+	private Button _settings = null;
+	
 
 	//*************************************************************************
 	/**
 	 * 
 	 */
+	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		setupIntents();
-		
-		setupUI();
-		
-		m_timer = new CountDownTimerComplex(this.getApplicationContext());
-		
-		updateBlinds(m_settings);
-
-		m_timer.startTiming((int) m_settings.getSecondsRemaining());
-	}
-
-	private void setupUI() 
-	{
-		m_settings = AppSettings.getSettings(this.getApplicationContext());
-		
-		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
-		m_BlindBig = (TextView) findViewById(R.id.textViewBigBlind);
-		m_BlindSmall = (TextView) findViewById(R.id.TextViewSmallBlind);
-		
-		pauseText = getString(R.string.pauseTimer);
-		startText = getString(R.string.startTimer);
-
-		//m_bigBlindOverride.setOnClickListener(this);
-		
-		m_pause = (Button)findViewById(R.id.ButtonPause);
-		m_pause.setOnClickListener(this);
-	}
-
-	// http://thinkandroid.wordpress.com/2010/01/24/handling-screen-off-and-screen-on-intents/
-	private void setupIntents() 
-	{
+		// http://thinkandroid.wordpress.com/2010/01/24/handling-screen-off-and-screen-on-intents/
 		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
 		filter.addAction(Intent.ACTION_SCREEN_OFF);
 		filter.addAction(CountDownTimerComplex.BROADCAST_MESSAGE_TICK);
 		filter.addAction(CountDownTimerComplex.BROADCAST_MESSAGE_COMPLETE);		
 		BroadcastReceiver mReceiver = new GeneralReceiver(this);
 		registerReceiver(mReceiver, filter);
+		
+		m_settings = AppSettings.getSettings(this.getApplicationContext());
+		
+		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
+		m_BlindBig = (TextView) findViewById(R.id.textViewBigBlind);
+		m_BlindSmall = (TextView) findViewById(R.id.TextViewSmallBlind);
+		_settings = (Button) findViewById(R.id.button_settings);
+		
+		m_manualBigBlindAlteration = (EditText) findViewById(R.id.txtBigBlindOverride);
+		
+		m_bigBlindOverride = (Button) findViewById(R.id.butManualBigBlindChange);
+		m_bigBlindOverride.setOnClickListener(this);
+		
+		m_pause = (Button)findViewById(R.id.ButtonPause);
+		m_pause.setOnClickListener(this);
+		
+		m_timer = new CountDownTimerComplex(this.getApplicationContext());
+		
+		_settings.setOnClickListener(this);
+		
+		updateBlinds(m_settings);
+
+		m_timer.startTiming((int) m_settings.getSecondsRemaining());
 	}
 	
 	//*************************************************************************
@@ -98,10 +94,9 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private void vibrateThePhone()
 	{
 		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-		long lVibratePattern[] = new long[m_settings.getVibrateRepeat() *2];
+		long[] lVibratePattern = new long[m_settings.getVibrateRepeat() *2];
 		int iMilliSeconds;
-		int max = m_settings.getVibrateRepeat() * 2;
-		for (int i = 0; i < max; i++)
+		for (int i = 0; i < (m_settings.getVibrateRepeat() * 2); i++)
 		{
 			if (isOdd(i)) {iMilliSeconds = 100;}
 			else {iMilliSeconds = 500;}
@@ -126,16 +121,14 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			if (m_timer.getIsTimerRunning() == true)
 			{
 				m_timer.pauseStart();
-				m_pause.setText(startText);
+				m_pause.setText("press to restart");
 			} else
 			{
 				m_timer.pauseStop();
-				m_pause.setText(pauseText);
+				m_pause.setText("press to pause");
 			}
 			
-		}
-		/* Commented out as this button is not currently used.
-		else if (v.getId() == R.id.butManualBigBlindChange)
+		}else if (v.getId() == R.id.butManualBigBlindChange)
 		{
 			// increase blinds
 			String sBigBlindHack = m_manualBigBlindAlteration.getText().toString();
@@ -145,8 +138,14 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			
 			// update the UI
 			updateBlinds(m_settings);
+		}else if (v.getId() == R.id.button_settings){
+				try{
+				Intent settingPrefs = new Intent(this, PreferenceLauncher.class);
+				startActivity(settingPrefs);
+				} catch (Exception e){
+					Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+				}
 		}
-		*/
 	}
 
 	//*************************************************************************
@@ -189,17 +188,30 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
     /**
      * make sure any lingering alarms are cancelled
      */
-    public void onDestroy()
+    @Override
+	public void onDestroy()
     {    	
     	if (m_timer != null) m_timer.destroy();
     	super.onDestroy();
     }
     
-    public void onPause()
+    @Override
+	public void onPause()
     {
     	m_settings.setSecondsRemaining(m_timer.getTimeRemainingInSeconds());
     	m_settings.save();
     	super.onPause();
+    }
+    
+    /*
+     * This will be used to make sure we read back the values saved
+     * from the settings intent. 
+     */
+    @Override
+    public void onStart(){
+    	super.onStart();
+    	// TODO implement
+    	
     }
     
 }

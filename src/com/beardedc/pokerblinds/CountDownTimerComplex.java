@@ -110,6 +110,7 @@ public class CountDownTimerComplex{
 		{
 			m_timer =  new CountDownTimer(milliSecondsToTime, m_iMultiplierMilli)
 			{
+				@Override
 				public void onTick(long millisUntilFinished)
 				{
 					m_milliRemainingToTime = millisUntilFinished;
@@ -118,6 +119,7 @@ public class CountDownTimerComplex{
 						m_contextToIssueUpdates.sendBroadcast(new Intent(BROADCAST_MESSAGE_TICK));	
 					}
 				}
+				@Override
 				public void onFinish()
 				{
 					m_bIsTimerRunning = false;
