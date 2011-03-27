@@ -11,6 +11,7 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class Launch extends Activity implements OnClickListener, IReturnFinished
 {
@@ -22,12 +23,14 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private Button m_pause;
 	private EditText m_manualBigBlindAlteration;
 	private Button m_bigBlindOverride;
+	private Button _settings = null;
 	
 
 	//*************************************************************************
 	/**
 	 * 
 	 */
+	@Override
 	public void onCreate(Bundle savedInstanceState)
 	{
 		super.onCreate(savedInstanceState);
@@ -46,6 +49,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
 		m_BlindBig = (TextView) findViewById(R.id.textViewBigBlind);
 		m_BlindSmall = (TextView) findViewById(R.id.TextViewSmallBlind);
+		_settings = (Button) findViewById(R.id.button_settings);
 		
 		m_manualBigBlindAlteration = (EditText) findViewById(R.id.txtBigBlindOverride);
 		
@@ -56,6 +60,8 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		m_pause.setOnClickListener(this);
 		
 		m_timer = new CountDownTimerComplex(this.getApplicationContext());
+		
+		_settings.setOnClickListener(this);
 		
 		updateBlinds(m_settings);
 
@@ -132,6 +138,13 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			
 			// update the UI
 			updateBlinds(m_settings);
+		}else if (v.getId() == R.id.button_settings){
+				try{
+				Intent settingPrefs = new Intent(this, PreferenceLauncher.class);
+				startActivity(settingPrefs);
+				} catch (Exception e){
+					Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+				}
 		}
 	}
 
@@ -175,17 +188,30 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
     /**
      * make sure any lingering alarms are cancelled
      */
-    public void onDestroy()
+    @Override
+	public void onDestroy()
     {    	
     	if (m_timer != null) m_timer.destroy();
     	super.onDestroy();
     }
     
-    public void onPause()
+    @Override
+	public void onPause()
     {
     	m_settings.setSecondsRemaining(m_timer.getTimeRemainingInSeconds());
     	m_settings.save();
     	super.onPause();
+    }
+    
+    /*
+     * This will be used to make sure we read back the values saved
+     * from the settings intent. 
+     */
+    @Override
+    public void onStart(){
+    	super.onStart();
+    	// TODO implement
+    	
     }
     
 }
