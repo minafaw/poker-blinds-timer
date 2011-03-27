@@ -22,6 +22,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private Button m_pause;
 	private EditText m_manualBigBlindAlteration;
 	private Button m_bigBlindOverride;
+	private String pauseText, startText;
 
 	//*************************************************************************
 	/**
@@ -51,10 +52,10 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		m_BlindBig = (TextView) findViewById(R.id.textViewBigBlind);
 		m_BlindSmall = (TextView) findViewById(R.id.TextViewSmallBlind);
 		
-		m_manualBigBlindAlteration = (EditText) findViewById(R.id.txtBigBlindOverride);
-		
-		m_bigBlindOverride = (Button) findViewById(R.id.butManualBigBlindChange);
-		m_bigBlindOverride.setOnClickListener(this);
+		pauseText = getString(R.string.pauseTimer);
+		startText = getString(R.string.startTimer);
+
+		//m_bigBlindOverride.setOnClickListener(this);
 		
 		m_pause = (Button)findViewById(R.id.ButtonPause);
 		m_pause.setOnClickListener(this);
@@ -125,14 +126,16 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			if (m_timer.getIsTimerRunning() == true)
 			{
 				m_timer.pauseStart();
-				m_pause.setText("press to restart");
+				m_pause.setText(startText);
 			} else
 			{
 				m_timer.pauseStop();
-				m_pause.setText("press to pause");
+				m_pause.setText(pauseText);
 			}
 			
-		}else if (v.getId() == R.id.butManualBigBlindChange)
+		}
+		/* Commented out as this button is not currently used.
+		else if (v.getId() == R.id.butManualBigBlindChange)
 		{
 			// increase blinds
 			String sBigBlindHack = m_manualBigBlindAlteration.getText().toString();
@@ -143,6 +146,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			// update the UI
 			updateBlinds(m_settings);
 		}
+		*/
 	}
 
 	//*************************************************************************
