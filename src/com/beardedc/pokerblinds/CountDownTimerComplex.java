@@ -197,8 +197,7 @@ public class CountDownTimerComplex{
 	//*************************************************************************
 	private String getHrsMinsSecFromMilliSec(long milliSecs)
 	{
-		String sReturn = "Time Remaining: ";
-		if (milliSecs == 0){return sReturn + "00:00:00";}
+		if (milliSecs == 0){return "00:00:00";}
 		
 		long seconds = milliSecs / m_iMultiplierMilli;
 		long secondsInHour = m_iMultiplierMinutesToSeconds * m_iMultiplierMinutesToSeconds;
@@ -206,11 +205,9 @@ public class CountDownTimerComplex{
 		int iMins = (int) ((seconds % secondsInHour) / m_iMultiplierMinutesToSeconds);
 		int iSecs = (int) ((seconds % secondsInHour) % m_iMultiplierMinutesToSeconds);
 		
-		sReturn = sReturn  
-					+ getDoubleNumberFormat(ihrs) + ":" 
-					+ getDoubleNumberFormat(iMins) + ":" 
-					+ getDoubleNumberFormat(iSecs);		
-		return sReturn;
+		return getDoubleNumberFormat(ihrs) + ":" 
+				+ getDoubleNumberFormat(iMins) + ":" 
+				+ getDoubleNumberFormat(iSecs);		
 	}
 	
 	//*************************************************************************
