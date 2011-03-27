@@ -14,4 +14,5 @@
 <TextView android:id="@+id/TextView02" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Manually Set the Big Blind"></TextView>
 <EditText android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/txtBigBlindOverride" android:text="100"></EditText>
 <Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/butManualBigBlindChange" android:text="Commit Big Blind Change"></Button>
+<Button android:text="Settings" android:id="@+id/button_settings" android:layout_width="wrap_content" android:layout_height="wrap_content"></Button>
 </LinearLayout>
