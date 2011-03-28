@@ -47,7 +47,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		
 		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
 		m_BlindBig = (TextView) findViewById(R.id.BigBlindValue);
-		m_BlindSmall = (TextView) findViewById(R.id.TextViewSmallBlind);
+		m_BlindSmall = (TextView) findViewById(R.id.SmallBlindValue);
 		
 		pauseText = getString(R.string.pauseTimer);
 		startText = getString(R.string.startTimer);
@@ -76,7 +76,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private void updateBlinds(AppSettings a)
 	{
 		updateTextView(Long.toString(a.getCurrentBigBlind()), m_BlindBig);
-		updateTextView("Small Blind is : " + (a.getCurrentBigBlind() /2), m_BlindSmall);
+		updateTextView(Long.toString(a.getCurrentBigBlind() /2), m_BlindSmall);
 	}
 	
 	//*************************************************************************
