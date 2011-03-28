@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="smallBlind">Small Blind</string>
+    <string name="bigBlind">Big Blind</string>
+    <string name="hello">Hello World, Launch!</string>
+    <string name="app_name">Poker Blinds Timer</string>
+    <string name="timeToBlindsGoUp">Time to blinds go up</string>
+    <string name="pauseTimer">Pause</string>
+    <string name="startTimer">Start</string>
+</resources>
