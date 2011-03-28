@@ -9,7 +9,6 @@ import android.os.Vibrator;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 public class Launch extends Activity implements OnClickListener, IReturnFinished
@@ -20,8 +19,6 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private CountDownTimerComplex m_timer;
 	private AppSettings m_settings;
 	private Button m_pause;
-	private EditText m_manualBigBlindAlteration;
-	private Button m_bigBlindOverride;
 	private String pauseText, startText;
 
 	//*************************************************************************
@@ -49,7 +46,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		m_settings = AppSettings.getSettings(this.getApplicationContext());
 		
 		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
-		m_BlindBig = (TextView) findViewById(R.id.textViewBigBlind);
+		m_BlindBig = (TextView) findViewById(R.id.BigBlindValue);
 		m_BlindSmall = (TextView) findViewById(R.id.TextViewSmallBlind);
 		
 		pauseText = getString(R.string.pauseTimer);
@@ -78,7 +75,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	 */
 	private void updateBlinds(AppSettings a)
 	{
-		updateTextView("Big Blind is   : " + a.getCurrentBigBlind(), m_BlindBig);
+		updateTextView(Long.toString(a.getCurrentBigBlind()), m_BlindBig);
 		updateTextView("Small Blind is : " + (a.getCurrentBigBlind() /2), m_BlindSmall);
 	}
 	
