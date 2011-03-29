@@ -1,25 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
 	
-	<PreferenceCategory android:title="Blind Options">
+	<PreferenceCategory android:title="Vibration Settings">
 		<CheckBoxPreference
-		        android:title="Vibrrate Blind Increase"
-		        android:defaultValue="true"
-		        android:summaryOn="Phone will vibrate"
-		        android:summaryOff="Vibration Setting Disabled"
-		        android:key="checkboxPref"
+			android:title="Vibrate when the blinds Increase"
+			android:defaultValue="true"
+			android:summaryOn="Phone will vibrate"
+			android:summaryOff="Vibration Setting Disabled"
+			android:key="prefCheckBoxVibrate"
+		/>
+		<com.beardedc.pokerblinds.PreferenceSeekBar
+			android:title="Vibration Count"
+			android:key="customSlider"
+			android:defaultValue="10"
 		/>
 		<ListPreference
-		        android:title="List Preference"
-		        android:summary="This preference allows to select an item in a array"
-		        android:key="listPref"
-		        android:defaultValue="Value 3"
-		        android:entries="@array/listArray"
-		        android:entryValues="@array/listValues"
+			android:title="List Preference"
+			android:summary="This preference allows to select an item in a array"
+			android:key="listPref"
+			android:defaultValue="Value 3"
+			android:entries="@array/listArray"
+			android:entryValues="@array/listValues"
 		/>
 	</PreferenceCategory>
 	
-	<PreferenceCategory android:title="Second Category">
+	<PreferenceCategory android:title="Blind Settings">
 		<EditTextPreference
 			android:name="EditText Preference"
 			android:summary="This allows you to enter a string"

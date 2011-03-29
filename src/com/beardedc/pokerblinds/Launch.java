@@ -23,7 +23,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private Button m_pause;
 	private EditText m_manualBigBlindAlteration;
 	private Button m_bigBlindOverride;
-	private Button _settings = null;
+	private Button m_Button_Settings = null;
 	private String pauseText, startText;
 
 	//*************************************************************************
@@ -54,7 +54,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
 		m_BlindBig = (TextView) findViewById(R.id.textViewBigBlind);
 		m_BlindSmall = (TextView) findViewById(R.id.TextViewSmallBlind);
-		_settings = (Button) findViewById(R.id.button_settings);
+		m_Button_Settings = (Button) findViewById(R.id.button_settings);
 		
 		pauseText = getString(R.string.pauseTimer);
 		startText = getString(R.string.startTimer);
@@ -64,7 +64,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		m_pause = (Button)findViewById(R.id.ButtonPause);
 		m_pause.setOnClickListener(this);
 		
-		_settings.setOnClickListener(this);
+		m_Button_Settings.setOnClickListener(this);
 	}
 
 	// http://thinkandroid.wordpress.com/2010/01/24/handling-screen-off-and-screen-on-intents/
@@ -103,17 +103,20 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
      */
 	private void vibrateThePhone()
 	{
-		Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
-		long lVibratePattern[] = new long[m_settings.getVibrateRepeat() *2];
-		int iMilliSeconds;
-		int max = m_settings.getVibrateRepeat() * 2;
-		for (int i = 0; i < max; i++)
+		if (m_settings.isVibrateDisabled() == false)
 		{
-			if (isOdd(i)) {iMilliSeconds = 100;}
-			else {iMilliSeconds = 500;}
-			lVibratePattern[i] = iMilliSeconds;
+			Vibrator v = (Vibrator) getSystemService(VIBRATOR_SERVICE);
+			long lVibratePattern[] = new long[m_settings.getVibrateRepeat() *2];
+			int iMilliSeconds;
+			int max = m_settings.getVibrateRepeat() * 2;
+			for (int i = 0; i < max; i++)
+			{
+				if (isOdd(i)) {iMilliSeconds = 100;}
+				else {iMilliSeconds = 500;}
+				lVibratePattern[i] = iMilliSeconds;
+			}
+			v.vibrate(lVibratePattern, -1);
 		}
-		v.vibrate(lVibratePattern, -1);
 	}
 	
 	private boolean isOdd(int i)
@@ -207,6 +210,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	public void onDestroy()
     {    	
     	if (m_timer != null) m_timer.destroy();
+    	
     	super.onDestroy();
     }
     
