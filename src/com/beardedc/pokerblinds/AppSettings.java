@@ -10,6 +10,7 @@ public class AppSettings
 	private long		m_initialBigBlind;
 	private long		m_currentBigBlind;
 	private int			m_iVibrateNumberOfTimes;
+	private boolean		m_bDisableVibrate;
 	
 	/*************************************************************************/
 	
@@ -19,14 +20,16 @@ public class AppSettings
 	private static final String PREFS_KEY_SECONDS_REMAINING = "Seconds Remaining";
 	private static final String PREFS_KEY_BIG_BLIND_CURRENT = "Big Blind Current";
 	private static final String PREFS_KEY_VIBRATE_NUMBER = "number of times to vibrate";
+	private static final String PREFS_KEY_VIBRATE_DISABLE = "vibrateDisable";
 	
 	private static final long PREF_DEFAULT_MINUTES = 60;
 	private static final long PREF_DEFAULT_BIG_BLIND = 50;
 	private static final int PREF_DEFAULT_VIBRATE_TIMES = 8;
+	private static final boolean PREF_DEFAULT_VIBRATE_DISABLE = false;
 	
 	/*************************************************************************/
 	
-	private static AppSettings	m_settings;
+	private static AppSettings m_settings;
 	
 	SharedPreferences m_sharedPrefs;
 	
@@ -65,6 +68,7 @@ public class AppSettings
 			m_initialBigBlind = m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND, PREF_DEFAULT_BIG_BLIND);
 			m_currentBigBlind = m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND_CURRENT, PREF_DEFAULT_BIG_BLIND);
 			m_iVibrateNumberOfTimes = m_sharedPrefs.getInt(PREFS_KEY_VIBRATE_NUMBER, PREF_DEFAULT_VIBRATE_TIMES);
+			m_bDisableVibrate = m_sharedPrefs.getBoolean(PREFS_KEY_VIBRATE_DISABLE, PREF_DEFAULT_VIBRATE_DISABLE);
 		}
 	}
 	
@@ -78,6 +82,7 @@ public class AppSettings
 		editor.putLong(PREFS_KEY_BIG_BLIND_CURRENT, m_currentBigBlind);
 		editor.putLong(PREFS_KEY_SECONDS_REMAINING, m_SecsRemaining);
 		editor.putInt(PREFS_KEY_VIBRATE_NUMBER, m_iVibrateNumberOfTimes);
+		editor.putBoolean(PREFS_KEY_VIBRATE_DISABLE, m_bDisableVibrate);
 		return editor.commit();
 	}
 	
@@ -140,6 +145,18 @@ public class AppSettings
 	public void setVibrateRepeat(int iRepeatNumber)
 	{
 		m_iVibrateNumberOfTimes = iRepeatNumber;
+	}
+	
+	/*************************************************************************/
+	
+	public boolean isVibrateDisabled()
+	{
+		return m_bDisableVibrate;
+	}
+	
+	public void setVibrateDisable(boolean bDisableVibrate)
+	{
+		m_bDisableVibrate = bDisableVibrate;
 	}
 	
 }
