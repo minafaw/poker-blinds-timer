@@ -12,11 +12,10 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 	
 	private AppSettings _settings = AppSettings.getSettings(this);
 	private Preference _pref_Vibrate_Disabled;
-	private Preference _pref_Vibrate_Count;
 	private Preference _pref_BigBlind;
 	
-	private static String M_PREF_VIBRATE_DURATION = "prefVibrateDuration";
 	private static String M_PREF_VIBRATE_DISABLED = "prefCheckBoxVibrate";
+	private static String M_PREF_BLIND_VALUE = "editTextBigBlind";
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,12 +24,13 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 		
 		try
 		{
-			// Get the custom preference
-			_pref_Vibrate_Count = (Preference) findPreference(PreferenceLauncher.M_PREF_VIBRATE_DURATION);
-			_pref_Vibrate_Count.setOnPreferenceClickListener(this);
-			
+			// vibration disabled setting
 			_pref_Vibrate_Disabled = (Preference) findPreference(PreferenceLauncher.M_PREF_VIBRATE_DISABLED);
 			_pref_Vibrate_Disabled.setOnPreferenceClickListener(this);
+			
+			_pref_BigBlind = (Preference) findPreference(PreferenceLauncher.M_PREF_BLIND_VALUE);
+			_pref_BigBlind.setOnPreferenceClickListener(this);
+			
 		}
 		catch (Exception e){
 			Toast.makeText(this.getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -42,11 +42,14 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 		if (prefClicked.getKey() == PreferenceLauncher.M_PREF_VIBRATE_DISABLED)
 		{
 			_settings.setVibrateDisable(!_settings.isVibrateDisabled());
-		} else if (prefClicked.getKey() == PreferenceLauncher.M_PREF_VIBRATE_DURATION)
+		} else if (prefClicked.getKey() == PreferenceLauncher.M_PREF_BLIND_VALUE)
 		{
-			// load the new preference dialog box? 
-			_settings.setVibrateRepeat(6);
+			String sValue = "0";
+			_pref_BigBlind.getSharedPreferences().getString(_pref_BigBlind.getKey(), sValue);
+			Long bigBlind = Long.getLong(sValue);
+			_settings.setInitalBigblind(bigBlind);
 		}
+		
 		return true;
 	}
 	
