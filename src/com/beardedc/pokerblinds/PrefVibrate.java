@@ -22,7 +22,6 @@ public class PrefVibrate extends PreferenceSeekBar {
 	@Override
 	protected View onCreateView(ViewGroup parent) {
 		// TODO Auto-generated method stub
-		m_settings = AppSettings.getSettings(getContext());
 		m_oldValue = m_settings.getVibrateRepeat();
 		return super.onCreateView(parent);
 	}

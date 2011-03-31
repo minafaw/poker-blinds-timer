@@ -22,7 +22,6 @@ public class PrefSeekBarDuration extends PreferenceSeekBar {
 	@Override
 	protected View onCreateView(ViewGroup parent) {
 		// TODO Auto-generated method stub
-		m_settings = AppSettings.getSettings(getContext());
 		m_oldValue = m_settings.getMinutes();
 		return super.onCreateView(parent);
 	}
