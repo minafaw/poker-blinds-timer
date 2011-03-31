@@ -77,18 +77,38 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 	}
 
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
-		 if (preference.getKey().equals(M_PREF_BLIND_VALUE_CURRENT))
+		long lNew;
+		if (preference.getKey().equals(M_PREF_BLIND_VALUE_CURRENT))
 		{
-			_settings.setCurrentBigBlind(Long.getLong(newValue.toString()));
+			 try{
+				 lNew = getLongValue(newValue);
+				 _settings.setCurrentBigBlind(lNew);
+			 }
+			 catch (Exception e){
+				 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+			 }
 			
 		} else if (preference.getKey().equals(M_PREF_BLIND_VALUE_START))
 		{
-			_settings.setInitalBigblind(Long.getLong(newValue.toString()));
+			 try{
+				 lNew = getLongValue(newValue);
+				 _settings.setInitalBigblind(lNew);
+			 }
+			 catch (Exception e){
+				 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+			 }
+			
 			
 		}
 		return true;
 	}
 	
+	private long getLongValue(Object newValue) throws Exception{
+		String s = newValue.toString();
+		long l = Long.parseLong(s);
+		return l;
+	}
+
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
