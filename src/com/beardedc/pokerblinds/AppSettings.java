@@ -11,6 +11,7 @@ public class AppSettings
 	private long		m_currentBigBlind;
 	private int			m_iVibrateNumberOfTimes;
 	private boolean		m_bDisableVibrate;
+	private boolean		m_bApplyUpdateNow;
 	
 	/*************************************************************************/
 	
@@ -21,11 +22,13 @@ public class AppSettings
 	private static final String PREFS_KEY_BIG_BLIND_CURRENT = "Big Blind Current";
 	private static final String PREFS_KEY_VIBRATE_NUMBER = "number of times to vibrate";
 	private static final String PREFS_KEY_VIBRATE_DISABLE = "vibrateDisable";
+	private static final String PREFS_KEY_APPLY_UPDATE_NOW = "applyUpdateNow";
 	
 	private static final long PREF_DEFAULT_MINUTES = 60;
 	private static final long PREF_DEFAULT_BIG_BLIND = 50;
 	private static final int PREF_DEFAULT_VIBRATE_TIMES = 8;
 	private static final boolean PREF_DEFAULT_VIBRATE_DISABLE = false;
+	private static final boolean PREF_DEFAULT_APPLY_UPDATE_NOW = false;
 	
 	/*************************************************************************/
 	
@@ -69,6 +72,7 @@ public class AppSettings
 			m_currentBigBlind = m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND_CURRENT, PREF_DEFAULT_BIG_BLIND);
 			m_iVibrateNumberOfTimes = m_sharedPrefs.getInt(PREFS_KEY_VIBRATE_NUMBER, PREF_DEFAULT_VIBRATE_TIMES);
 			m_bDisableVibrate = m_sharedPrefs.getBoolean(PREFS_KEY_VIBRATE_DISABLE, PREF_DEFAULT_VIBRATE_DISABLE);
+			m_bApplyUpdateNow = m_sharedPrefs.getBoolean(PREFS_KEY_APPLY_UPDATE_NOW, PREF_DEFAULT_APPLY_UPDATE_NOW);
 		}
 	}
 	
@@ -83,7 +87,20 @@ public class AppSettings
 		editor.putLong(PREFS_KEY_SECONDS_REMAINING, m_SecsRemaining);
 		editor.putInt(PREFS_KEY_VIBRATE_NUMBER, m_iVibrateNumberOfTimes);
 		editor.putBoolean(PREFS_KEY_VIBRATE_DISABLE, m_bDisableVibrate);
+		editor.putBoolean(PREFS_KEY_APPLY_UPDATE_NOW, m_bApplyUpdateNow);
 		return editor.commit();
+	}
+	
+	/*************************************************************************/
+	public boolean getApplyUpdateNow()
+	{
+		return m_bApplyUpdateNow;
+	}
+	
+	/*************************************************************************/
+	public void setApplyUpdateNow(boolean bApplyUpdateNow)
+	{
+		m_bApplyUpdateNow = bApplyUpdateNow;
 	}
 	
 	/*************************************************************************/

@@ -40,10 +40,10 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		
 		setupUI();
 		
+		updateBlinds();
+		
 		m_timer = new CountDownTimerComplex(this.getApplicationContext());
 		
-		updateBlinds(m_settings);
-
 		m_timer.startTiming((int) m_settings.getSecondsRemaining());
 	}
 
@@ -82,10 +82,10 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	/**
 	 * 
 	 */
-	private void updateBlinds(AppSettings a)
+	private void updateBlinds()
 	{
-		updateTextView("Big Blind is   : " + a.getCurrentBigBlind(), m_BlindBig);
-		updateTextView("Small Blind is : " + (a.getCurrentBigBlind() /2), m_BlindSmall);
+		updateTextView("Big Blind is   : " + m_settings.getCurrentBigBlind(), m_BlindBig);
+		updateTextView("Small Blind is : " + (m_settings.getCurrentBigBlind() /2), m_BlindSmall);
 	}
 	
 	//*************************************************************************
@@ -188,7 +188,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 			m_settings.setCurrentBigBlind( m_settings.getCurrentBigBlind() * 2);
 			
 			// update the UI
-			updateBlinds(m_settings);
+			updateBlinds();
 			
 			// update the timer to zero values
 			String sUpdateValue = m_timer.getTimeRemainingUIFormat();
@@ -228,9 +228,21 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
      */
     @Override
     public void onStart(){
-    	super.onStart();
-    	// TODO implement
     	
+    	// if we are suppose to do stuff
+    	if (m_settings.getApplyUpdateNow()) 
+    	{
+    		updateBlinds();
+    		
+    		// destroy current timer
+    		m_timer.destroy();
+    		m_timer = new CountDownTimerComplex(this);
+    		m_timer.startTiming((int) m_settings.getMinutes() * 60);
+    		
+    		m_settings.setApplyUpdateNow(false);
+    		m_settings.save();
+    	}
+    	super.onStart();
     }
     
 }

@@ -14,8 +14,12 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 abstract class PreferenceSeekBar extends Preference implements OnSeekBarChangeListener {
-	public static int m_maximum 	= 20;
-	public static int m_interval	= 1;
+	protected int m_maximum 	= 20;
+	protected int m_interval	= 1;
+	protected int m_minimum     = 0;
+	
+	public static String M_STR_NAMESPACE="android";
+	public static String M_STR_MAX = "defaultValue";
 	
 	protected float m_oldValue;
 	private TextView m_TextView_CurrentValue;
@@ -23,20 +27,41 @@ abstract class PreferenceSeekBar extends Preference implements OnSeekBarChangeLi
 	protected AppSettings m_settings;
 	
 	public PreferenceSeekBar(Context context) {
-		 super(context);
+		super(context);
+		m_settings = AppSettings.getSettings(getContext());
 	}
 	
 	public PreferenceSeekBar(Context context, AttributeSet attrs) {
 		super(context, attrs);
+		m_settings = AppSettings.getSettings(getContext());
+		setXMLDefaults(attrs, context);
 	}
 	
 	public PreferenceSeekBar(Context context, AttributeSet attrs, int defStyle) {
 		 super(context, attrs, defStyle);
+		 m_settings = AppSettings.getSettings(getContext());
+		 setXMLDefaults(attrs, context);
 	}
 	
+	 private void setXMLDefaults(AttributeSet attrs, Context c) {
+		 try{
+			 
+			 TypedArray a = c.obtainStyledAttributes(attrs,R.styleable.PreferenceSeekBarXML);
+			 m_maximum = a.getInt(R.styleable.PreferenceSeekBarXML_sliderMax, 60);
+			 m_minimum = a.getInt(R.styleable.PreferenceSeekBarXML_sliderMin, 1);
+			 m_interval = a.getInt(R.styleable.PreferenceSeekBarXML_increment, 1);
+			 
+		 }catch (Exception e){
+			 m_maximum = 60;
+			 m_minimum = 1;
+			 m_interval = 1;
+		 }
+		 	 
+	}
 	
 	@Override
 	protected View onCreateView(ViewGroup parent){
+		
 		LinearLayout layout = new LinearLayout(getContext());
 		layout.setPadding(15, 5, 10, 5);
 		layout.setOrientation(LinearLayout.VERTICAL);
@@ -59,8 +84,8 @@ abstract class PreferenceSeekBar extends Preference implements OnSeekBarChangeLi
 		
 		return layout; 
 	 }
-	 
-	 private LinearLayout getUserViewLayout() {
+
+	private LinearLayout getUserViewLayout() {
 		 LinearLayout layout = new LinearLayout(getContext());
 		 layout.setOrientation(LinearLayout.HORIZONTAL);
 		 
