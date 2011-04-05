@@ -9,7 +9,6 @@ import android.os.Vibrator;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -21,8 +20,6 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private CountDownTimerComplex m_timer;
 	private AppSettings m_settings;
 	private Button m_pause;
-	private EditText m_manualBigBlindAlteration;
-	private Button m_bigBlindOverride;
 	private Button m_Button_Settings = null;
 	private String pauseText, startText;
 
@@ -52,9 +49,9 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		m_settings = AppSettings.getSettings(this.getApplicationContext());
 		
 		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
-		m_BlindBig = (TextView) findViewById(R.id.textViewBigBlind);
-		m_BlindSmall = (TextView) findViewById(R.id.TextViewSmallBlind);
-		m_Button_Settings = (Button) findViewById(R.id.button_settings);
+		m_BlindBig = (TextView) findViewById(R.id.BigBlindValue);
+		m_BlindSmall = (TextView) findViewById(R.id.SmallBlindValue);
+		m_Button_Settings = (Button) findViewById(R.id.ButtonSettings);
 		
 		pauseText = getString(R.string.pauseTimer);
 		startText = getString(R.string.startTimer);
@@ -84,8 +81,10 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	 */
 	private void updateBlinds()
 	{
-		updateTextView("Big Blind is   : " + m_settings.getCurrentBigBlind(), m_BlindBig);
-		updateTextView("Small Blind is : " + (m_settings.getCurrentBigBlind() /2), m_BlindSmall);
+		long bigBlind = m_settings.getCurrentBigBlind();
+		long smallBlind = bigBlind / 2;
+		updateTextView(Long.toString(bigBlind), m_BlindBig);
+		updateTextView(Long.toString(smallBlind), m_BlindSmall);
 	}
 	
 	//*************************************************************************
@@ -142,7 +141,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 				m_pause.setText(pauseText);
 			}
 			
-		}else if (v.getId() == R.id.button_settings)
+		}else if (v.getId() == R.id.ButtonSettings)
 		{
 			try{
 			Intent settingPrefs = new Intent(this, PreferenceLauncher.class);
