@@ -7,4 +7,5 @@
     <string name="timeToBlindsGoUp">Time to blinds go up</string>
     <string name="pauseTimer">Pause</string>
     <string name="startTimer">Start</string>
+    <string name="settingsText">Settings</string>
 </resources>
