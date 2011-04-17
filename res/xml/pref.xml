@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen 
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:psb="http://schemas.android.com/apk/res/com.beardedc.pokerblinds"
+	>
+	
+	<PreferenceCategory android:title="Blind Settings">
+		<EditTextPreference
+			android:summary="Altering this will reset the big blind"
+			android:defaultValue="100"
+			android:title="Big Blind current value"
+			android:key="editTextBigBlind_Current"
+		/>
+		
+		<EditTextPreference
+			android:summary="This alters the starting big blind"
+			android:defaultValue="100"
+			android:title="Big Blind starting value"
+			android:key="editTextBigBlind_Start"
+		/>
+		
+		<com.beardedc.pokerblinds.PrefSeekBarDuration
+			android:title="Minutes till blind increase: "
+			android:key="prefMinutes"
+			psb:sliderMax="60"
+			psb:sliderMin="1"
+			psb:increment="1"	
+		/>
+	</PreferenceCategory>
+	
+	<PreferenceCategory android:title="Vibration Settings">
+		<CheckBoxPreference
+			android:title="Vibrate when the blinds Increase"
+			android:defaultValue="true"
+			android:summaryOn="Phone will vibrate"
+			android:summaryOff="Vibration Setting Disabled"
+			android:key="prefCheckBoxVibrate"
+		/>
+		<com.beardedc.pokerblinds.PrefVibrate
+			android:dependency="prefCheckBoxVibrate"
+			android:title="Vibration Count: "
+			android:key="customSlider"
+			psb:sliderMax="15"
+			psb:sliderMin="1"
+			psb:increment="1"
+		/>
+	</PreferenceCategory>
+	
+	<PreferenceCategory android:title="Misc">
+		<PreferenceScreen
+			android:title="Apply new settings next round"
+			android:key="prefApplySettingsNextRound"
+		/>
+		<PreferenceScreen
+			android:title="Apply settings now"
+			android:key="prefApplySettings"
+		/>
+	</PreferenceCategory>
+</PreferenceScreen>
