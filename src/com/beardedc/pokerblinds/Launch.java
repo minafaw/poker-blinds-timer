@@ -6,22 +6,21 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Vibrator;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class Launch extends Activity implements OnClickListener, IReturnFinished
+public class Launch extends Activity implements IReturnFinished
 {
 	private TextView m_txtTimer;
 	private TextView m_BlindBig;
 	private TextView m_BlindSmall;
 	private CountDownTimerComplex m_timer;
 	private AppSettings m_settings;
-	private Button m_pause;
-	private Button m_Button_Settings = null;
 	private String pauseText, startText;
+	private MenuItem _menuItem_Pause = null;
+	private MenuItem _menuItem_Settings = null;
 
 	//*************************************************************************
 	/**
@@ -43,6 +42,48 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		
 		if (m_timer.getIsTimerRunning()) m_timer.startTiming((int) m_settings.getSecondsRemaining());
 	}
+	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu)
+	{
+		if (m_timer.getIsTimerRunning() == true){
+			_menuItem_Pause = menu.add(pauseText);
+		} else{
+			_menuItem_Pause = menu.add(startText);
+		}
+		_menuItem_Settings = menu.add("Settings");
+		return super.onCreateOptionsMenu(menu);
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item)
+	{
+		if (item.equals(_menuItem_Settings))
+		{
+			try
+			{
+				Intent settingPrefs = new Intent(this, PreferenceLauncher.class);
+				startActivity(settingPrefs);
+				return true;
+			} catch (Exception e)
+			{
+				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+			}
+		} else if (item.equals(_menuItem_Pause))
+		{
+			if (m_timer.getIsTimerRunning() == true)
+			{
+				m_timer.pauseStart();
+				_menuItem_Pause.setTitle(startText);
+			} else
+			{
+				m_timer.pauseStop();
+				_menuItem_Pause.setTitle(pauseText);
+			}
+			return true;
+		}
+		return false;
+	}
 
 	private void setupUI() 
 	{
@@ -51,17 +92,12 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		m_txtTimer = (TextView) findViewById(R.id.TextTimer);
 		m_BlindBig = (TextView) findViewById(R.id.BigBlindValue);
 		m_BlindSmall = (TextView) findViewById(R.id.SmallBlindValue);
-		m_Button_Settings = (Button) findViewById(R.id.ButtonSettings);
 		
 		pauseText = getString(R.string.pauseTimer);
 		startText = getString(R.string.startTimer);
 
 		//m_bigBlindOverride.setOnClickListener(this);
 		
-		m_pause = (Button)findViewById(R.id.ButtonPause);
-		m_pause.setOnClickListener(this);
-		
-		m_Button_Settings.setOnClickListener(this);
 	}
 
 	// http://thinkandroid.wordpress.com/2010/01/24/handling-screen-off-and-screen-on-intents/
@@ -121,48 +157,6 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 	private boolean isOdd(int i)
 	{
 		return ((i % 1) == 1);
-	}
-
-	//*************************************************************************
-	/**
-	 * 
-	 */
-	public void onClick(View v)
-	{
-		if (v.getId() == R.id.ButtonPause)
-		{
-			if (m_timer.getIsTimerRunning() == true)
-			{
-				m_timer.pauseStart();
-				m_pause.setText(startText);
-			} else
-			{
-				m_timer.pauseStop();
-				m_pause.setText(pauseText);
-			}
-			
-		}else if (v.getId() == R.id.ButtonSettings)
-		{
-			try{
-			Intent settingPrefs = new Intent(this, com.beardedc.pokerblinds.PreferenceLauncher.class);
-			startActivity(settingPrefs);
-			} catch (Exception e){
-				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
-			}
-		}
-		/* Commented out as this button is not currently used.
-		else if (v.getId() == R.id.butManualBigBlindChange)
-		{
-			// increase blinds
-			String sBigBlindHack = m_manualBigBlindAlteration.getText().toString();
-			long lBigBlind = Long.parseLong(sBigBlindHack);
-			m_settings.setCurrentBigBlind(lBigBlind);
-			m_settings.save();
-			
-			// update the UI
-			updateBlinds(m_settings);
-		}
-		*/
 	}
 
 	//*************************************************************************

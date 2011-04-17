@@ -66,11 +66,4 @@
 		</LinearLayout>
 
 	</LinearLayout>
-
-	<Button android:layout_width="fill_parent" android:layout_height="wrap_content" 
-		android:id="@+id/ButtonPause"
-		android:layout_gravity="center_horizontal" android:text="@string/pauseTimer" />
-	<Button android:layout_width="fill_parent" android:layout_height="wrap_content"
-		android:id="@+id/ButtonSettings" android:layout_gravity="center_horizontal"
-		android:text="@string/settingsText" />
 </LinearLayout>
