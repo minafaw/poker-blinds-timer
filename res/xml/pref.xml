@@ -10,6 +10,7 @@
 			android:defaultValue="100"
 			android:title="Big Blind current value"
 			android:key="editTextBigBlind_Current"
+			android:inputType="number"
 		/>
 		
 		<EditTextPreference
@@ -17,6 +18,7 @@
 			android:defaultValue="100"
 			android:title="Big Blind starting value"
 			android:key="editTextBigBlind_Start"
+			android:inputType="number"
 		/>
 		
 		<com.beardedc.pokerblinds.PrefSeekBarDuration
