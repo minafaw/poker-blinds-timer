@@ -1,5 +1,6 @@
 package com.beardedc.pokerblinds;
 
+import com.beardedc.pokerblinds.R;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
@@ -97,8 +98,6 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 			 catch (Exception e){
 				 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
 			 }
-			
-			
 		}
 		return true;
 	}

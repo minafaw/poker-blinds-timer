@@ -41,7 +41,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		
 		m_timer = new CountDownTimerComplex(this.getApplicationContext());
 		
-		m_timer.startTiming((int) m_settings.getSecondsRemaining());
+		if (m_timer.getIsTimerRunning()) m_timer.startTiming((int) m_settings.getSecondsRemaining());
 	}
 
 	private void setupUI() 
@@ -144,7 +144,7 @@ public class Launch extends Activity implements OnClickListener, IReturnFinished
 		}else if (v.getId() == R.id.ButtonSettings)
 		{
 			try{
-			Intent settingPrefs = new Intent(this, PreferenceLauncher.class);
+			Intent settingPrefs = new Intent(this, com.beardedc.pokerblinds.PreferenceLauncher.class);
 			startActivity(settingPrefs);
 			} catch (Exception e){
 				Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
