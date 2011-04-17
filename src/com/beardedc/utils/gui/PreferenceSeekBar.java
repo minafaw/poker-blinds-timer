@@ -1,6 +1,5 @@
 package com.beardedc.utils.gui;
 
-import com.beardedc.pokerblinds.AppSettings;
 import com.beardedc.pokerblinds.R;
 import android.content.Context;
 import android.content.res.TypedArray;
@@ -18,34 +17,26 @@ import android.widget.TextView;
 public class PreferenceSeekBar extends Preference implements OnSeekBarChangeListener {
 	protected int m_maximum 	= 20;
 	protected int m_interval	= 1;
-	protected int m_minimum     = 0;
+	protected int m_minimum     = 1;
 	protected int m_current;
-	
-//	public static String M_STR_NAMESPACE		= "android";
-//	public static String M_STR_MAX 				= "defaultValue";
 	
 	protected int m_oldValue = 5;
 	private TextView m_TextView_CurrentValue;
 	
-	protected AppSettings m_settings;
-	
 	public PreferenceSeekBar(Context context)
 	{
 		super(context);
-		m_settings = AppSettings.getSettings(getContext());
 	}
 	
 	public PreferenceSeekBar(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
-		m_settings = AppSettings.getSettings(getContext());
 		setXMLDefaults(attrs, context);
 	}
 	
 	public PreferenceSeekBar(Context context, AttributeSet attrs, int defStyle)
 	{
 		 super(context, attrs, defStyle);
-		 m_settings = AppSettings.getSettings(getContext());
 		 setXMLDefaults(attrs, context);
 	}
 
@@ -56,6 +47,7 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 			m_maximum = a.getInt(R.styleable.PreferenceSeekBarXML_sliderMax, 60);
 			m_minimum = a.getInt(R.styleable.PreferenceSeekBarXML_sliderMin, 1);
 			m_interval = a.getInt(R.styleable.PreferenceSeekBarXML_increment, 1);
+			
 		}catch (Exception e){
 			m_maximum = 60;
 			m_minimum = 1;
@@ -85,7 +77,8 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 		
 		layout.addView(layoutUserResults);
 		layout.addView(bar);
-		layout.setId(android.R.id.widget_frame);
+		
+//		layout.setId(android.R.id.widget_frame);
 		
 		return layout; 
 	}
@@ -118,7 +111,6 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 		
 		layout.addView(title);
 		layout.addView(m_TextView_CurrentValue);
-		layout.setId(android.R.id.widget_frame);
 		
 		return layout;
 	}
@@ -126,14 +118,28 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 	public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser)
 	{
 		progress = Math.round(((float)progress)/m_interval)*m_interval;
+		
+		// add on the minimum value
+		if (progress > m_maximum)
+		{
+			progress = m_maximum;
+		} else if (progress < m_minimum)
+		{
+			progress = m_minimum;
+		}
+		
 		m_oldValue = progress;
-		m_TextView_CurrentValue.setText(Integer.toString(progress));
 		m_current = progress;
+		
+		m_TextView_CurrentValue.setText(Integer.toString(progress));
 	}
 	
 	public void onStartTrackingTouch(SeekBar seekBar) {}
 	
-	public void onStopTrackingTouch(SeekBar seekBar) {}
+	public void onStopTrackingTouch(SeekBar seekBar)
+	{
+		notifyChanged();
+	}
 	
 	@Override 
 	protected Object onGetDefaultValue(TypedArray ta,int index)
@@ -147,7 +153,7 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 	{
 		int temp = restoreValue ? getPersistedInt(50) : (Integer)defaultValue; 
 		if(!restoreValue) persistInt(temp); 
-		this.m_oldValue = temp;
+		m_oldValue = temp;
 	}
 	
 	private int validateValue(int value)
