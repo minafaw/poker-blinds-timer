@@ -5,7 +5,7 @@ import android.content.SharedPreferences;
 
 public class AppSettings 
 {
-	private long 		m_minutes;
+	private int 		m_minutes;
 	private long 		m_SecsRemaining;
 	private long		m_initialBigBlind;
 	private long		m_currentBigBlind;
@@ -24,7 +24,7 @@ public class AppSettings
 	private static final String PREFS_KEY_VIBRATE_DISABLE = "vibrateDisable";
 	private static final String PREFS_KEY_APPLY_UPDATE_NOW = "applyUpdateNow";
 	
-	private static final long PREF_DEFAULT_MINUTES = 60;
+	private static final int PREF_DEFAULT_MINUTES = 60;
 	private static final long PREF_DEFAULT_BIG_BLIND = 50;
 	private static final int PREF_DEFAULT_VIBRATE_TIMES = 8;
 	private static final boolean PREF_DEFAULT_VIBRATE_DISABLE = false;
@@ -66,7 +66,7 @@ public class AppSettings
 		if (c != null)
 		{
 			m_sharedPrefs =	c.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE );
-			m_minutes = m_sharedPrefs.getLong(PREFS_KEY_MINUTES, PREF_DEFAULT_MINUTES);
+			m_minutes = m_sharedPrefs.getInt(PREFS_KEY_MINUTES, PREF_DEFAULT_MINUTES);
 			m_SecsRemaining = m_sharedPrefs.getLong(PREFS_KEY_SECONDS_REMAINING, PREF_DEFAULT_MINUTES);
 			m_initialBigBlind = m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND, PREF_DEFAULT_BIG_BLIND);
 			m_currentBigBlind = m_sharedPrefs.getLong(PREFS_KEY_BIG_BLIND_CURRENT, PREF_DEFAULT_BIG_BLIND);
@@ -81,7 +81,7 @@ public class AppSettings
 	public boolean save()
 	{
 		SharedPreferences.Editor editor = m_sharedPrefs.edit();
-		editor.putLong(PREFS_KEY_MINUTES, m_minutes);
+		editor.putInt(PREFS_KEY_MINUTES, m_minutes);
 		editor.putLong(PREFS_KEY_BIG_BLIND, m_initialBigBlind);
 		editor.putLong(PREFS_KEY_BIG_BLIND_CURRENT, m_currentBigBlind);
 		editor.putLong(PREFS_KEY_SECONDS_REMAINING, m_SecsRemaining);
@@ -105,12 +105,12 @@ public class AppSettings
 	
 	/*************************************************************************/
 
-	public long getMinutes()
+	public int getMinutes()
 	{
 		return m_minutes;
 	}
 
-	public void setMinutes(long m_minutes)
+	public void setMinutes(int m_minutes)
 	{
 		this.m_minutes = m_minutes;
 		setSecondsRemaining(m_minutes 

@@ -23,7 +23,7 @@ public abstract class PreferenceSeekBar extends Preference implements OnSeekBarC
 	public static String M_STR_NAMESPACE="android";
 	public static String M_STR_MAX = "defaultValue";
 	
-	protected float m_oldValue;
+	protected int m_oldValue;
 	private TextView m_TextView_CurrentValue;
 	
 	protected AppSettings m_settings;
@@ -76,7 +76,7 @@ public abstract class PreferenceSeekBar extends Preference implements OnSeekBarC
 		
 		SeekBar bar = new SeekBar(getContext());
 		bar.setMax(m_maximum);
-		bar.setProgress((int) m_oldValue);
+		bar.setProgress(m_oldValue);
 		bar.setLayoutParams(layoutBar);
 		bar.setOnSeekBarChangeListener(this);
 		
@@ -106,7 +106,7 @@ public abstract class PreferenceSeekBar extends Preference implements OnSeekBarC
 											LinearLayout.LayoutParams.WRAP_CONTENT);
 		 layout_CurrentValue.gravity = Gravity.RIGHT;
 		 m_TextView_CurrentValue = new TextView(getContext());
-		 m_TextView_CurrentValue.setText(Float.toString(m_oldValue));
+		 m_TextView_CurrentValue.setText(Integer.toString(m_oldValue));
 		 m_TextView_CurrentValue.setTextSize(18);
 		 m_TextView_CurrentValue.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
 		 m_TextView_CurrentValue.setGravity(Gravity.CENTER);
@@ -121,20 +121,11 @@ public abstract class PreferenceSeekBar extends Preference implements OnSeekBarC
 	 
 	 public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser) {
 		
-		 progress = Math.round(((float)progress)/m_interval)*m_interval;
-	  
-	    if(!callChangeListener(progress)){
-		    seekBar.setProgress((int) m_oldValue); 
-		    return; 
-	    }
-	    
-	    seekBar.setProgress(progress);
+		progress = Math.round(((float)progress)/m_interval)*m_interval;
 	    m_oldValue = progress;
-	    m_TextView_CurrentValue.setText(Integer.toString(seekBar.getProgress()));
-	    
+	    m_TextView_CurrentValue.setText(Integer.toString(progress));
+
 	    updatePreference(progress);
-	  
-	    notifyChanged();
 	 }
 
 	 public void onStartTrackingTouch(SeekBar seekBar) {
