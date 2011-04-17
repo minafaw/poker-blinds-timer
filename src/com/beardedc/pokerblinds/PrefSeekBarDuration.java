@@ -1,5 +1,9 @@
 package com.beardedc.pokerblinds;
 
+
+
+import com.beardedc.utils.gui.PreferenceSeekBar;
+
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.View;

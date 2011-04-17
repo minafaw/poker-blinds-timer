@@ -1,5 +1,7 @@
-package com.beardedc.pokerblinds;
+package com.beardedc.utils.gui;
 
+import com.beardedc.pokerblinds.AppSettings;
+import com.beardedc.pokerblinds.R;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Typeface;
@@ -13,7 +15,7 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-abstract class PreferenceSeekBar extends Preference implements OnSeekBarChangeListener {
+public abstract class PreferenceSeekBar extends Preference implements OnSeekBarChangeListener {
 	protected int m_maximum 	= 20;
 	protected int m_interval	= 1;
 	protected int m_minimum     = 0;
