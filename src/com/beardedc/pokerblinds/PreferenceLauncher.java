@@ -1,21 +1,25 @@
 package com.beardedc.pokerblinds;
 
 import com.beardedc.pokerblinds.R;
+import com.beardedc.utils.gui.PreferenceSeekBar;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
-import android.widget.Toast;
+import android.util.Log;
 
 public class PreferenceLauncher extends PreferenceActivity implements OnPreferenceClickListener, OnPreferenceChangeListener {
 	
+	public final static String TAG = "PreferenceLauncher";
 	private AppSettings _settings = AppSettings.getSettings(this);
 	private Preference _pref_Vibrate_Disabled;
 	private Preference _pref_BigBlind_Current;
 	private Preference _pref_BigBlind_Start;
 	private Preference _pref_ApplyNow;
 	private Preference _pref_ApplyLater;
+	private com.beardedc.utils.gui.PreferenceSeekBar _pref_Duration;
+	private com.beardedc.utils.gui.PreferenceSeekBar _pref_Vibration;
 	
 	private boolean _b_vibrateDisabled;
 	
@@ -24,15 +28,23 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 	private static String M_PREF_BLIND_VALUE_START = "editTextBigBlind_Start";
 	private static String M_PREF_APPLY_NOW = "prefApplySettings";
 	private static String M_PREF_APPLY_LATER = "prefApplySettingsNextRound";
+	private static String M_PREF_TIMER_DURATION = "prefSliderMinutes";
+	private static String M_PREF_VIBRATE_COUNT = "prefSliderVibrateCount";
+	
 	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		addPreferencesFromResource(R.xml.pref);
-		
 		try
 		{
-			// vibration disabled setting
+			addPreferencesFromResource(R.xml.pref);
+			
+			_pref_Duration = (PreferenceSeekBar) findPreference(PreferenceLauncher.M_PREF_TIMER_DURATION);
+			_pref_Duration.setOnPreferenceChangeListener(this);
+			
+			_pref_Vibration = (PreferenceSeekBar) findPreference(PreferenceLauncher.M_PREF_VIBRATE_COUNT);
+			_pref_Vibration.setOnPreferenceChangeListener(this);
+			
 			_pref_Vibrate_Disabled = (Preference) findPreference(PreferenceLauncher.M_PREF_VIBRATE_DISABLED);
 			_pref_Vibrate_Disabled.setOnPreferenceClickListener(this);
 			
@@ -51,7 +63,7 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 			_b_vibrateDisabled = _settings.isVibrateDisabled();
 		}
 		catch (Exception e){
-			Toast.makeText(this.getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+			Log.e(TAG, e.getMessage());
 		}
 		
     }
@@ -71,34 +83,36 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 		} else if (prefClicked.getKey().equals(M_PREF_APPLY_LATER))
 		{
 			finish();
-			
 		}
 		
 		return true;
 	}
 
-	public boolean onPreferenceChange(Preference preference, Object newValue) {
+	public boolean onPreferenceChange(Preference preference, Object newValue)
+	{
 		long lNew;
-		if (preference.getKey().equals(M_PREF_BLIND_VALUE_CURRENT))
+		try
 		{
-			 try{
+			if (preference.getKey().equals(M_PREF_BLIND_VALUE_CURRENT))
+			{
 				 lNew = getLongValue(newValue);
-				 _settings.setCurrentBigBlind(lNew);
-			 }
-			 catch (Exception e){
-				 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-			 }
-			
-		} else if (preference.getKey().equals(M_PREF_BLIND_VALUE_START))
-		{
-			 try{
+				 _settings.setCurrentBigBlind(lNew);			
+			} else if (preference.getKey().equals(M_PREF_BLIND_VALUE_START))
+			{
 				 lNew = getLongValue(newValue);
 				 _settings.setInitalBigblind(lNew);
-			 }
-			 catch (Exception e){
-				 Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-			 }
+			} else if (preference.getKey().equals(M_PREF_TIMER_DURATION))
+			{
+				_settings.setMinutes(Integer.getInteger((String) newValue));	
+			} else if (preference.getKey().equals(M_PREF_VIBRATE_COUNT))
+			{
+				 _settings.setVibrateRepeat(Integer.getInteger((String) newValue));
+			}
+		} catch (Exception e)
+		{
+			Log.e(TAG, e.getMessage());
 		}
+		
 		return true;
 	}
 	

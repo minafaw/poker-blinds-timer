@@ -21,10 +21,10 @@
 			android:inputType="number"
 		/>
 		
-		<com.beardedc.pokerblinds.PrefSeekBarDuration
+		<com.beardedc.utils.gui.PreferenceSeekBar
 			android:title="Minutes till blind increase: "
-			android:key="prefMinutes"
-			psb:sliderMax="60"
+			android:key="prefSliderMinutes"
+			psb:sliderMax="30"
 			psb:sliderMin="1"
 			psb:increment="1"	
 		/>
@@ -38,11 +38,11 @@
 			android:summaryOff="Vibration Setting Disabled"
 			android:key="prefCheckBoxVibrate"
 		/>
-		<com.beardedc.pokerblinds.PrefVibrate
+		<com.beardedc.utils.gui.PreferenceSeekBar
 			android:dependency="prefCheckBoxVibrate"
 			android:title="Vibration Count: "
-			android:key="customSlider"
-			psb:sliderMax="15"
+			android:key="prefSliderVibrateCount"
+			psb:sliderMax="10"
 			psb:sliderMin="1"
 			psb:increment="1"
 		/>
