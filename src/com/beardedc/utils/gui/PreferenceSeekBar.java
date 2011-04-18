@@ -19,6 +19,7 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 	protected int m_interval	= 1;
 	protected int m_minimum     = 1;
 	protected int m_current;
+	protected SeekBar m_bar;
 	
 	protected int m_oldValue = 5;
 	protected TextView m_TextView_CurrentValue;
@@ -69,16 +70,14 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 											LinearLayout.LayoutParams.WRAP_CONTENT);
 		layoutBar.gravity = Gravity.RIGHT;
 		
-		SeekBar bar = new SeekBar(getContext());
-		bar.setMax(m_maximum - m_minimum);
-		bar.setProgress(m_oldValue);
-		bar.setLayoutParams(layoutBar);
-		bar.setOnSeekBarChangeListener(this);
+		m_bar = new SeekBar(getContext());
+		m_bar.setMax(m_maximum - m_minimum);
+		m_bar.setProgress(m_oldValue);
+		m_bar.setLayoutParams(layoutBar);
+		m_bar.setOnSeekBarChangeListener(this);
 		
 		layout.addView(layoutUserResults);
-		layout.addView(bar);
-		
-//		layout.setId(android.R.id.widget_frame);
+		layout.addView(m_bar);
 		
 		return layout; 
 	}
@@ -141,10 +140,8 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 		return value;  
 	}
 	
-	public int getCurrentValue()
-	{
-		return m_current;
-	}
+	public int getCurrentProgress(){ return m_current;}
+	public void setCurrentProgress(int i){m_oldValue = i; m_current = i;}
 
 	public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser)
 	{
@@ -153,6 +150,7 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 		progress = Math.round(((float)progress)/m_interval)*m_interval;
 		m_current = progress;
 		m_TextView_CurrentValue.setText(Integer.toString(m_current));
+		if (fromUser == false) m_oldValue = m_current;
 	}
 
 	public void onStartTrackingTouch(SeekBar seekBar) {}
@@ -162,7 +160,7 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 		if (m_oldValue != m_current) 
 		{
 			m_oldValue = m_current;
-			notifyChanged();
+			callChangeListener(m_current);
 		}
 	}
 	
