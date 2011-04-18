@@ -47,9 +47,9 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 	{
 		try{
 			TypedArray a = c.obtainStyledAttributes(attrs,R.styleable.PreferenceSeekBarXML);
-			m_maximum = a.getInt(R.styleable.PreferenceSeekBarXML_sliderMax, 60);
 			m_minimum = a.getInt(R.styleable.PreferenceSeekBarXML_sliderMin, 1);
 			m_interval = a.getInt(R.styleable.PreferenceSeekBarXML_increment, 1);
+			m_maximum = a.getInt(R.styleable.PreferenceSeekBarXML_sliderMax, 60) - m_minimum;
 			
 		}catch (Exception e){
 			m_maximum = 60;
@@ -73,7 +73,7 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 		layoutBar.gravity = Gravity.RIGHT;
 		
 		m_bar = new SeekBar(getContext());
-		m_bar.setMax(m_maximum - m_minimum);
+		m_bar.setMax(m_maximum);
 		m_bar.setProgress(m_oldValue);
 		m_bar.setLayoutParams(layoutBar);
 		m_bar.setOnSeekBarChangeListener(this);
