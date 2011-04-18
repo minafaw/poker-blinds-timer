@@ -31,7 +31,6 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 	private static String M_PREF_TIMER_DURATION = "prefSliderMinutes";
 	private static String M_PREF_VIBRATE_COUNT = "prefSliderVibrateCount";
 	
-	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,9 +40,11 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 			
 			_pref_Duration = (PreferenceSeekBar) findPreference(PreferenceLauncher.M_PREF_TIMER_DURATION);
 			_pref_Duration.setOnPreferenceChangeListener(this);
+			_pref_Duration.setCurrentProgress(_settings.getMinutes());
 			
 			_pref_Vibration = (PreferenceSeekBar) findPreference(PreferenceLauncher.M_PREF_VIBRATE_COUNT);
 			_pref_Vibration.setOnPreferenceChangeListener(this);
+			_pref_Vibration.setCurrentProgress(_settings.getVibrateRepeat());
 			
 			_pref_Vibrate_Disabled = (Preference) findPreference(PreferenceLauncher.M_PREF_VIBRATE_DISABLED);
 			_pref_Vibrate_Disabled.setOnPreferenceClickListener(this);
@@ -62,8 +63,15 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 			
 			_b_vibrateDisabled = _settings.isVibrateDisabled();
 		}
-		catch (Exception e){
-			Log.e(TAG, e.getMessage());
+		catch (Exception e)
+		{
+			String sNull = "NullPointerException";
+			String error;
+			if (e.getMessage() == null) 
+				{error = sNull;}
+			else 
+				{error = sNull;}
+			Log.e(TAG, error);
 		}
 		
     }
@@ -95,18 +103,23 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 		{
 			if (preference.getKey().equals(M_PREF_BLIND_VALUE_CURRENT))
 			{
-				 lNew = getLongValue(newValue);
-				 _settings.setCurrentBigBlind(lNew);			
+				lNew = getLongValue(newValue);
+				_settings.setCurrentBigBlind(lNew);
+				 
 			} else if (preference.getKey().equals(M_PREF_BLIND_VALUE_START))
 			{
-				 lNew = getLongValue(newValue);
-				 _settings.setInitalBigblind(lNew);
+				lNew = getLongValue(newValue);
+				_settings.setInitalBigblind(lNew);
+				 
 			} else if (preference.getKey().equals(M_PREF_TIMER_DURATION))
 			{
-				_settings.setMinutes(Integer.getInteger((String) newValue));	
+				PreferenceSeekBar sb = (PreferenceSeekBar) preference;
+				_settings.setMinutes(sb.getCurrentProgress());
+				
 			} else if (preference.getKey().equals(M_PREF_VIBRATE_COUNT))
 			{
-				 _settings.setVibrateRepeat(Integer.getInteger((String) newValue));
+				PreferenceSeekBar sb = (PreferenceSeekBar) preference;
+				_settings.setVibrateRepeat(sb.getCurrentProgress());
 			}
 		} catch (Exception e)
 		{
