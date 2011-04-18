@@ -124,9 +124,9 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		_settings.save();
 		super.onDestroy();
 	}
+
     
 }

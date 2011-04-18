@@ -14,14 +14,14 @@ import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
-public class PreferenceSeekBar extends Preference implements OnSeekBarChangeListener {
+public class PreferenceSeekBar extends Preference implements OnSeekBarChangeListener{
 	protected int m_maximum 	= 20;
 	protected int m_interval	= 1;
 	protected int m_minimum     = 1;
 	protected int m_current;
 	
 	protected int m_oldValue = 5;
-	private TextView m_TextView_CurrentValue;
+	protected TextView m_TextView_CurrentValue;
 	
 	public PreferenceSeekBar(Context context)
 	{
@@ -70,7 +70,7 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 		layoutBar.gravity = Gravity.RIGHT;
 		
 		SeekBar bar = new SeekBar(getContext());
-		bar.setMax(m_maximum);
+		bar.setMax(m_maximum - m_minimum);
 		bar.setProgress(m_oldValue);
 		bar.setLayoutParams(layoutBar);
 		bar.setOnSeekBarChangeListener(this);
@@ -115,32 +115,6 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 		return layout;
 	}
 	
-	public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser)
-	{
-		progress = Math.round(((float)progress)/m_interval)*m_interval;
-		
-		// add on the minimum value
-		if (progress > m_maximum)
-		{
-			progress = m_maximum;
-		} else if (progress < m_minimum)
-		{
-			progress = m_minimum;
-		}
-		
-		m_oldValue = progress;
-		m_current = progress;
-		
-		m_TextView_CurrentValue.setText(Integer.toString(progress));
-	}
-	
-	public void onStartTrackingTouch(SeekBar seekBar) {}
-	
-	public void onStopTrackingTouch(SeekBar seekBar)
-	{
-		notifyChanged();
-	}
-	
 	@Override 
 	protected Object onGetDefaultValue(TypedArray ta,int index)
 	{
@@ -171,4 +145,25 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 	{
 		return m_current;
 	}
+
+	public void onProgressChanged(SeekBar seekBar, int progress,boolean fromUser)
+	{
+		// apply offset (minimum value)
+		progress = progress + m_minimum;
+		progress = Math.round(((float)progress)/m_interval)*m_interval;
+		m_current = progress;
+		m_TextView_CurrentValue.setText(Integer.toString(m_current));
+	}
+
+	public void onStartTrackingTouch(SeekBar seekBar) {}
+	
+	public void onStopTrackingTouch(SeekBar seekBar)
+	{
+		if (m_oldValue != m_current) 
+		{
+			m_oldValue = m_current;
+			notifyChanged();
+		}
+	}
+	
 }
