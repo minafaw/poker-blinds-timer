@@ -6,6 +6,7 @@ import android.content.res.TypedArray;
 import android.graphics.Typeface;
 import android.preference.Preference;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class PreferenceSeekBar extends Preference implements OnSeekBarChangeListener{
+	private static String TAG = "PreferenceSeekBar";
 	protected int m_maximum 	= 20;
 	protected int m_interval	= 1;
 	protected int m_minimum     = 1;
@@ -59,7 +61,7 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 	@Override
 	protected View onCreateView(ViewGroup parent)
 	{
-		
+		Log.e(TAG, "entered onCreateView");
 		LinearLayout layout = new LinearLayout(getContext());
 		layout.setPadding(15, 5, 10, 5);
 		layout.setOrientation(LinearLayout.VERTICAL);
