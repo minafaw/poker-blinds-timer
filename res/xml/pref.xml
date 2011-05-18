@@ -11,6 +11,7 @@
 			android:title="Big Blind current value"
 			android:key="editTextBigBlind_Current"
 			android:inputType="number"
+			android:orderingFromXml="true"
 		/>
 		
 		<EditTextPreference
@@ -19,29 +20,33 @@
 			android:title="Big Blind starting value"
 			android:key="editTextBigBlind_Start"
 			android:inputType="number"
+			android:orderingFromXml="true"
 		/>
 		
 		<com.beardedc.utils.gui.PreferenceSeekBar
-			android:title="Minutes till blind increase: "
 			android:key="prefSliderMinutes"
+			android:title="Minutes: "
 			psb:sliderMax="30"
 			psb:sliderMin="1"
-			psb:increment="1"	
+			psb:increment="1"
 		/>
+		
 	</PreferenceCategory>
 	
 	<PreferenceCategory android:title="Vibration Settings">
 		<CheckBoxPreference
-			android:title="Vibrate when the blinds Increase"
+			android:key="prefCheckBoxVibrate"
+			android:title="Vibrate on timer end"
 			android:defaultValue="true"
 			android:summaryOn="Phone will vibrate"
 			android:summaryOff="Vibration Setting Disabled"
-			android:key="prefCheckBoxVibrate"
+			android:orderingFromXml="true"
 		/>
 		<com.beardedc.utils.gui.PreferenceSeekBar
+			android:key="prefSliderVibrateCount"
 			android:dependency="prefCheckBoxVibrate"
 			android:title="Vibration Count: "
-			android:key="prefSliderVibrateCount"
+			android:orderingFromXml="true"
 			psb:sliderMax="10"
 			psb:sliderMin="1"
 			psb:increment="1"
@@ -52,10 +57,12 @@
 		<PreferenceScreen
 			android:title="Apply new settings next round"
 			android:key="prefApplySettingsNextRound"
+			android:orderingFromXml="true"
 		/>
 		<PreferenceScreen
 			android:title="Apply settings now"
 			android:key="prefApplySettings"
+			android:orderingFromXml="true"
 		/>
 	</PreferenceCategory>
 </PreferenceScreen>

@@ -16,31 +16,39 @@ import android.widget.SeekBar.OnSeekBarChangeListener;
 import android.widget.TextView;
 
 public class PreferenceSeekBar extends Preference implements OnSeekBarChangeListener{
-	private static String TAG = "PreferenceSeekBar";
-	protected int m_maximum 	= 20;
-	protected int m_interval	= 1;
-	protected int m_minimum     = 1;
+	private static String TAG 				= "PreferenceSeekBar";
+	private static boolean _logStuff 		= true;
+	protected int m_maximum 				= 20;
+	protected int m_interval				= 1;
+	protected int m_minimum     			= 1;
 	protected int m_current;
 	protected SeekBar m_bar;
+	protected LinearLayout _layout_view_Overall;
 	
 	protected int m_oldValue = 5;
 	protected TextView m_TextView_CurrentValue;
 	
+	protected void log(String error){if (_logStuff) Log.e(TAG, error); }
+	
 	public PreferenceSeekBar(Context context)
 	{
 		super(context);
+		log("class being constructed");
 	}
 	
 	public PreferenceSeekBar(Context context, AttributeSet attrs)
 	{
 		super(context, attrs);
 		setXMLDefaults(attrs, context);
+		log("class being constructed");
 	}
 	
 	public PreferenceSeekBar(Context context, AttributeSet attrs, int defStyle)
 	{
 		 super(context, attrs, defStyle);
 		 setXMLDefaults(attrs, context);
+		 log("class being constructed");
+		 
 	}
 
 	private void setXMLDefaults(AttributeSet attrs, Context c)
@@ -61,10 +69,12 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 	@Override
 	protected View onCreateView(ViewGroup parent)
 	{
-		Log.e(TAG, "entered onCreateView");
-		LinearLayout layout = new LinearLayout(getContext());
-		layout.setPadding(15, 5, 10, 5);
-		layout.setOrientation(LinearLayout.VERTICAL);
+		log("entered onCreateView");
+		log("KeyValue of Preference: " + getKey());
+		
+		_layout_view_Overall = new LinearLayout(getContext());
+		_layout_view_Overall.setPadding(15, 5, 10, 5);
+		_layout_view_Overall.setOrientation(LinearLayout.VERTICAL);
 		
 		LinearLayout layoutUserResults = getUserViewLayout();
 		LinearLayout.LayoutParams layoutBar = new LinearLayout.LayoutParams(
@@ -74,14 +84,14 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 		
 		m_bar = new SeekBar(getContext());
 		m_bar.setMax(m_maximum);
-		m_bar.setProgress(m_oldValue);
+		m_bar.setProgress(m_oldValue - m_minimum);
 		m_bar.setLayoutParams(layoutBar);
 		m_bar.setOnSeekBarChangeListener(this);
 		
-		layout.addView(layoutUserResults);
-		layout.addView(m_bar);
+		_layout_view_Overall.addView(layoutUserResults);
+		_layout_view_Overall.addView(m_bar);
 		
-		return layout; 
+		return _layout_view_Overall; 
 	}
 	
 	private LinearLayout getUserViewLayout()
@@ -95,6 +105,8 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 										LinearLayout.LayoutParams.WRAP_CONTENT);
 		layout_Title.gravity = Gravity.LEFT;
 		TextView title = new TextView(getContext());
+		title.setTextSize(18);
+		title.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
 		title.setText((String)getTitle());
 		title.setLayoutParams(layout_Title);
 		
@@ -105,8 +117,8 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 		layout_CurrentValue.gravity = Gravity.RIGHT;
 		m_TextView_CurrentValue = new TextView(getContext());
 		m_TextView_CurrentValue.setText(Integer.toString(m_oldValue));
-		m_TextView_CurrentValue.setTextSize(18);
-		m_TextView_CurrentValue.setTypeface(Typeface.SANS_SERIF, Typeface.BOLD);
+		m_TextView_CurrentValue.setTextSize(16);
+		m_TextView_CurrentValue.setTypeface(Typeface.SANS_SERIF, Typeface.NORMAL);
 		m_TextView_CurrentValue.setGravity(Gravity.CENTER);
 		m_TextView_CurrentValue.setLayoutParams(layout_CurrentValue);
 		
@@ -166,4 +178,32 @@ public class PreferenceSeekBar extends Preference implements OnSeekBarChangeList
 		}
 	}
 	
+	@Override
+	public View getView(View convertView, ViewGroup parent)
+	{
+		if (this._layout_view_Overall == null)
+			convertView = onCreateView(parent);
+		else
+			convertView = this._layout_view_Overall;
+		
+		return convertView;
+	} 
+	
+	@Override
+	public void onDependencyChanged(Preference dependency, boolean disableDependent)
+	{
+		super.onDependencyChanged(dependency, disableDependent);
+		toggleViewDisable(disableDependent);
+	}
+	
+	public void toggleViewDisable(boolean disable)
+	{
+		log("££3 Disabled this slider: " + disable);
+		if(this._layout_view_Overall != null)
+		{
+			log("££4 : we are here ");
+			this._layout_view_Overall.setEnabled(!disable);
+			this.m_bar.setEnabled(!disable);
+		} 
+	}
 }
