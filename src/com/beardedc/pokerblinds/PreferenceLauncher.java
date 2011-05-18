@@ -2,7 +2,10 @@ package com.beardedc.pokerblinds;
 
 import com.beardedc.pokerblinds.R;
 import com.beardedc.utils.gui.PreferenceSeekBar;
+
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.CheckBoxPreference;
 import android.preference.Preference;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
@@ -12,8 +15,9 @@ import android.util.Log;
 public class PreferenceLauncher extends PreferenceActivity implements OnPreferenceClickListener, OnPreferenceChangeListener {
 	
 	public final static String TAG = "PreferenceLauncher";
+	public final static boolean _logStuff = true;
 	private AppSettings _settings = AppSettings.getSettings(this);
-	private Preference _pref_Vibrate_Disabled;
+	private CheckBoxPreference _pref_Vibrate_Disabled;
 	private Preference _pref_BigBlind_Current;
 	private Preference _pref_BigBlind_Start;
 	private Preference _pref_ApplyNow;
@@ -31,6 +35,8 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 	private static String M_PREF_TIMER_DURATION = "prefSliderMinutes";
 	private static String M_PREF_VIBRATE_COUNT = "prefSliderVibrateCount";
 	
+	private void log(String message){ if (_logStuff) Log.e(TAG, message); }
+	
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -46,8 +52,16 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 			_pref_Vibration.setOnPreferenceChangeListener(this);
 			_pref_Vibration.setCurrentProgress(_settings.getVibrateRepeat());
 			
-			_pref_Vibrate_Disabled = (Preference) findPreference(PreferenceLauncher.M_PREF_VIBRATE_DISABLED);
+			_pref_Vibrate_Disabled = (CheckBoxPreference) findPreference(PreferenceLauncher.M_PREF_VIBRATE_DISABLED);
 			_pref_Vibrate_Disabled.setOnPreferenceClickListener(this);
+			
+			log("££1");
+			SharedPreferences sp = _pref_Vibrate_Disabled.getSharedPreferences();
+			if (sp.getBoolean(PreferenceLauncher.M_PREF_VIBRATE_DISABLED, true) == false)
+			{
+				log("££2");
+				_pref_Vibration.toggleViewDisable(false);
+			}
 			
 			_pref_ApplyNow = (Preference) findPreference(PreferenceLauncher.M_PREF_APPLY_NOW);
 			_pref_ApplyNow.setOnPreferenceClickListener(this);
@@ -71,12 +85,14 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 				{error = sNull;}
 			else 
 				{error = sNull;}
-			Log.e(TAG, error);
+			log(error);
 		}
 		
     }
     
 	public boolean onPreferenceClick(Preference prefClicked) {
+		
+		log("Preference Clicked: " + prefClicked.getKey());
 		
 		if (prefClicked.getKey().equals(M_PREF_VIBRATE_DISABLED))
 		{			
@@ -99,6 +115,8 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 	public boolean onPreferenceChange(Preference preference, Object newValue)
 	{
 		long lNew;
+		log("Preference Changed: " + preference.getKey());
+		
 		try
 		{
 			if (preference.getKey().equals(M_PREF_BLIND_VALUE_CURRENT))
@@ -121,10 +139,7 @@ public class PreferenceLauncher extends PreferenceActivity implements OnPreferen
 				PreferenceSeekBar sb = (PreferenceSeekBar) preference;
 				_settings.setVibrateRepeat(sb.getCurrentProgress());
 			}
-		} catch (Exception e)
-		{
-			Log.e(TAG, e.getMessage());
-		}
+		} catch (Exception e) { log(e.getMessage()); }
 		
 		return true;
 	}

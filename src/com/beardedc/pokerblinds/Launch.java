@@ -228,9 +228,12 @@ public class Launch extends Activity implements IReturnFinished
     		updateBlinds();
     		
     		// destroy current timer
-    		m_timer.destroy();
-    		m_timer = new CountDownTimerComplex(this);
-    		m_timer.startTiming((int) m_settings.getMinutes() * 60);
+    		if (m_timer != null & m_timer.getIsTimerRunning())
+    		{
+        		m_timer.destroy();
+        		m_timer = new CountDownTimerComplex(this);
+        		m_timer.startTiming((int) m_settings.getMinutes() * 60);
+    		}
     		
     		m_settings.setApplyUpdateNow(false);
     		m_settings.save();
